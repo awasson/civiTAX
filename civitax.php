@@ -28,8 +28,8 @@ function civitax_civicrm_navigationMenu( &$params ) {
   $maxKey = ( max( array_keys($params) ) );
   $params[$maxKey+1] = array (
     'attributes' => array (
-    'label' => 'CiviTAX',
-    'name' => 'CiviTAX',
+    'label' => 'CiviTax',
+    'name' => 'CiviTax',
     'url'        => null,
     'permission' => null,
     'operator'   => null,
