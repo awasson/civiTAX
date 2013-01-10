@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<extension key="ca.lunahost.civitax" type="module">
+  <file>civitax</file>
+  <name>civiCRM Tax Field Extension</name>
+  <description>An extension module to provide the ability for applying taxes to purchases via the civiCRM system.</description>
+  <urls>
+    <url desc="Main Extension Page">FIXME</url>
+    <url desc="Documentation">FIXME</url>
+    <url desc="Support">FIXME</url>
+    <url desc="Licensing">http://civicrm.org/licensing</url>
+  </urls>
+  <license>AGPL</license>
+  <maintainer>
+    <author>Andrew Wasson | Luna Design</author>
+    <email>awasson@lunadesign.org</email>
+  </maintainer>
+  <releaseDate>2013-01-09</releaseDate>
+  <version>1.0</version>
+  <develStage>alpha</develStage>
+  <compatibility>
+    <ver>4.2</ver>
+  </compatibility>
+  <comments>This is a new, undeveloped module</comments>
+  <civix>
+    <namespace>CRM/Civitax</namespace>
+  </civix>
+</extension>
