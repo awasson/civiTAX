@@ -19,6 +19,46 @@ function civitax_civicrm_xmlMenu(&$files) {
 }
 
 /**
+ * Implementation of hook_civicrm_navigationMenu
+ *
+ * @param $params array(string)
+ */
+function civitax_civicrm_navigationMenu( &$params ) {
+  // get the maximum key of $params
+  $maxKey = ( max( array_keys($params) ) );
+  $params[$maxKey+1] = array (
+    'attributes' => array (
+    'label' => 'CiviTAX',
+    'name' => 'CiviTAX',
+    'url'        => null,
+    'permission' => null,
+    'operator'   => null,
+    'separator'  => null,
+    'parentID'   => null,
+    'navID' => $maxKey+1,
+    'active' => 1
+	),
+    	'child' =>  array (
+    		'1' => array (
+                'attributes' => array (
+                    'label'      => 'Configuration',
+                    'name'       => 'Configuration',
+                    'url'        => 'civicrm/civitax/settings',
+                    'permission' => 'administer CiviCRM',
+                    'operator'   => null,
+                    'separator'  => 1,
+                    'parentID'   => $maxKey+1,
+                    'navID'      => 1,
+                    'active'     => 1
+                ),
+            'child' => null
+            ) 
+        ) 
+    );
+}
+
+
+/**
  * Implementation of hook_civicrm_install
  */
 function civitax_civicrm_install() {
