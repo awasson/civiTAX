@@ -12,7 +12,7 @@
     <td class="civi-tax-contribution-type">{$contribution_item.name}</td>
     <td class="civi-tax-applicable-taxes">
     {foreach from=$arr_tax_types key=tax_id item=tax_i}
-		<input type="checkbox" id="memberships_{$tax_i.tax}" value="{$tax_i.id}" name="contribution_{$contribution_item.id}[]"> - {$tax_i.tax} ({$tax_i.rate}) &nbsp;   
+		<label class="civi-tax-checkboxes"><input type="checkbox" id="memberships_{$tax_i.tax}" value="{$tax_i.id}" name="contribution_{$contribution_item.id}[]"> {$tax_i.tax} ({$tax_i.rate}) </label>  
 	{/foreach}
     </td>
   </tr>
@@ -39,6 +39,10 @@
 
 .civi-tax-applicable-taxes {
     font-size: 0.9em;
+}
+
+.civi-tax-checkboxes {
+	margin-right: 1em;
 }
 
 
