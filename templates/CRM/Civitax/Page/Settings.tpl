@@ -1,4 +1,4 @@
-<h3>CiviCRM Tax Module Settings</h3>
+<h3>CiviCRM Tax Field Settings</h3>
 
 <p>Select applicable taxes for contribution types from the table below.</p>
 
