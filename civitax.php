@@ -41,8 +41,8 @@ function civitax_civicrm_navigationMenu( &$params ) {
     	'child' =>  array (
     		'1' => array (
                 'attributes' => array (
-                    'label'      => 'Configuration',
-                    'name'       => 'Configuration',
+                    'label'      => 'Settings',
+                    'name'       => 'Settings',
                     'url'        => 'civicrm/civitax/settings',
                     'permission' => 'administer CiviCRM',
                     'operator'   => null,
