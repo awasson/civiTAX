@@ -36,6 +36,7 @@ class CRM_Civitax_Page_Settings extends CRM_Core_Page {
        	$arr_tax_types[$x]['id'] = $dao->id;
        	$arr_tax_types[$x]['tax'] = $dao->tax;
        	$arr_tax_types[$x]['rate'] = $dao->rate;
+       	$arr_tax_types[$x]['active'] = $dao->active;
        	$x++;	
     }
   	$this->assign('arr_tax_types', $arr_tax_types);

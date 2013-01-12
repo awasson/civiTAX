@@ -34,7 +34,7 @@
 	<tr>
 	  <td>{$tax_i.tax}</td>
 	  <td>{$tax_i.rate|floor}%</td>
-	  <td><input type="checkbox" id="taxes_{$tax_i.tax}" value="{$tax_i.id}" name="tax_types_{$tax_i.tax}[]"></td>
+	  <td><input type="checkbox" id="taxes_{$tax_i.tax}" value="{$tax_i.id}" name="tax_types_{$tax_i.tax}[]" checked="{$tax_i.active}"></td>
 	  <td>edit</td>
 	</tr>	 
 	{/foreach}

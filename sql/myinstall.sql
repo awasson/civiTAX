@@ -1,12 +1,11 @@
 CREATE TABLE IF NOT EXISTS `civi_tax_type` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `tax` VARCHAR(45) NOT NULL ,
-  `rate` DECIMAL(4,2) NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) )
-ENGINE = InnoDB;
-
-
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tax` varchar(45) NOT NULL,
+  `rate` decimal(4,2) NOT NULL,
+  `active` tinyint(1) DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id` ASC)
+) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS `civicrm`.`civi_tax_invoicing` (
   `id` INT NOT NULL AUTO_INCREMENT ,
@@ -16,5 +15,18 @@ CREATE TABLE IF NOT EXISTS `civicrm`.`civi_tax_invoicing` (
   `tax_charged` FLOAT NOT NULL DEFAULT 0 ,
   `post_tax` FLOAT NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) )
-ENGINE = InnoDB;
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) 
+) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `civi_tax_contribution_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tax_id` int(11) NOT NULL,
+  `contribution_type_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idcivi_tax_contribution_type_UNIQUE` (`id`)
+) ENGINE=InnoDB;
+
+
+
+
+
