@@ -66,6 +66,10 @@
 	margin-right: 1em;
 }
 
+#crm-container .civi-tax-status {
+	font-weight: bold;
+}
+
 #crm-container #civi-tax-message {
     background-color: infobackground;
     border: 3px solid #CDE8FE;
@@ -117,7 +121,7 @@
   				data: { tax_status : TaxStatus, tax_id : TaxID, tax_name : TaxName },
   				
   				success: function(data){
-    				jq("#civi-tax-message").html("<p>UPDATE: " + TaxName + " is now <strong>" + TaxActive + "</strong>.</p>");
+    				jq("#civi-tax-message").html("<p>UPDATE: " + TaxName + " tax is now <span class='civi-tax-status'>" + TaxActive + "</span>.</p>");
     				jq("#civi-tax-message").fadeIn('slow', function() {
 						setTimeout(function(){
     						jq("#civi-tax-message").fadeOut("slow");
