@@ -2,7 +2,8 @@
 
 <h3>CiviCRM Tax Field Settings</h3>
 
-<p><strong>Select applicable taxes for contribution types from the table below.</strong></p>
+<p><strong>Select applicable taxes for contribution types from the table below.</strong>
+<br/><em>NOTE: If a tax type has been disabled it will not be applied to contribution transactions even if it appears checked. Only active taxes will be applied to transactions.</em></p>
 
 <table class="civi-tax-contribution-type" cellpadding="0" cellspacing="0" border="0">
   <tr>
