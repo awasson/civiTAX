@@ -9,6 +9,6 @@ This extension provides the ability to add any number of taxes via a settings pa
 
 On the reporting side, we've added a database table that tracks invoice id, pre-tax cost, tax charged, the type of taxes applied and post-tax amount. This table can be queried at the time the reports are run and then the report can be appended with the information provided within. 
 
-In our modified version of civiCRM we modified the Detail.php file that is responsible for producing detailed reports (civicrm/CRM/Report/Form/Contribute/Detail.php). With the CiviTax extension we will attempt to overload the functions within the Detail.php code... I'm not sure how I'm going to do that just yet so you'll have to bare with me while I figure it out :~/
+In our modified version of civiCRM we modified the Detail.php file that is responsible for producing detailed reports (civicrm/CRM/Report/Form/Contribute/Detail.php). With the CiviTax extension we will attempt to overload the functions within the Detail.php code... I'm not sure how I'm going to do that just yet so you'll have to bare with me while I figure it out :~|
 
 More information regarding our prior methods can be found here: http://groups.drupal.org/node/182444 
