@@ -1,4 +1,9 @@
-<div id="civi-tax-message">Message Box</div>
+		{foreach from=$arr_tax_contribution_type key=tax_contribution_id item=tax_contribution_i}
+    		{if $tax_contribution_i.contribution_type_id == 2} checked {/if}
+    	{/foreach}
+
+
+<div id="civi-tax-message"></div>
 
 <h3>CiviCRM Tax Field Settings</h3>
 
@@ -14,7 +19,11 @@
     <td class="civi-tax-contribution-type">{$contribution_item.name}</td>
     <td class="civi-tax-applicable-taxes">
     {foreach from=$arr_tax_types key=tax_id item=tax_i}
-		<label class="civi-tax-checkboxes"><input class="{$tax_i.tax}" type="checkbox" id="{$contribution_item.name}_{$tax_i.tax}" value="{$tax_i.id}" name="contribution_{$contribution_item.id}[]" {if $tax_i.active == false} disabled="true" {/if}> {$tax_i.tax} ({$tax_i.rate|floor}%) </label>  
+    
+		<label class="civi-tax-checkboxes">
+			<input class="{$tax_i.tax}" type="checkbox" id="{$contribution_item.name}_{$tax_i.tax}" value="{$tax_i.id}" name="contribution_{$contribution_item.id}[]" {if $tax_i.active == false} disabled="true" {/if} {foreach from=$arr_tax_contribution_type key=tax_contribution_id item=tax_contribution_i} {if $tax_contribution_i.contribution_type_id == $contribution_item.id && $tax_contribution_i.tax_id == $tax_i.id} checked {/if} {/foreach} /> {$tax_i.tax} ({$tax_i.rate|floor}%) 
+		</label>  
+	
 	{/foreach}
     </td>
   </tr>
@@ -70,14 +79,18 @@
 	font-weight: bold;
 }
 
+#crm-container .civi-tax-status-status {
+	text-decoration: underline;
+}
+
 #crm-container #civi-tax-message {
-    background-color: infobackground;
-    border: 3px solid #CDE8FE;
+    background-color: #CDE8FE;
+    border: 3px solid #48A9E4;
     color: infotext;
     font-family: Helvetica,Arial,Sans;
     font-size: 0.9em;
     font-style: italic;
-    padding: 5px;
+    padding: 5px 10px;
     position: absolute;
     top: -30px;
     display: none;
@@ -121,16 +134,15 @@
   				data: { tax_status : TaxStatus, tax_id : TaxID, tax_name : TaxName },
   				
   				success: function(data){
-    				jq("#civi-tax-message").html("<p>UPDATE: " + TaxName + " tax is now <span class='civi-tax-status'>" + TaxActive + "</span>.</p>");
-    				jq("#civi-tax-message").fadeIn('slow', function() {
-						setTimeout(function(){
-    						jq("#civi-tax-message").fadeOut("slow");
-						},5000)
-					});
+    				jq("#civi-tax-message").html("<p><span class='civi-tax-status'>Update:</span> " + TaxName + " tax is now <span class='civi-tax-status-status'>" + TaxActive + "</span>.</p>");
+    				jq("#civi-tax-message").fadeIn('slow');
+					setTimeout(function(){
+    					jq("#civi-tax-message").fadeOut("slow");
+					},3000)
   				},
   				
   				error: function(){
-    				jq("#civi-tax-message").html("<p>ERROR: There was a problem changing this items status. <br/>Please refresh the page and try again.</p>");
+    				jq("#civi-tax-message").html("<p><span class='civi-tax-status'>Error:</span> There was a problem changing this items status. <br/>Please refresh the page and try again.</p>");
   				}
 			});
 			

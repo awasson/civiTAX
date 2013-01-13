@@ -30,7 +30,7 @@ class CRM_Civitax_Page_Settings extends CRM_Core_Page {
   	 */
   	$sql = 'SELECT * FROM civi_tax_type';
   	$dao = CRM_Core_DAO::executeQuery($sql);
-  	$arr_arr_tax_types = array();
+  	$arr_tax_types = array();
     $x = 0;
     while( $dao->fetch( ) ) {   
        	$arr_tax_types[$x]['id'] = $dao->id;
@@ -40,7 +40,25 @@ class CRM_Civitax_Page_Settings extends CRM_Core_Page {
        	$x++;	
     }
   	$this->assign('arr_tax_types', $arr_tax_types);
-  
+  	
+  	
+  	/**
+  	 * GET CONTRIBUTION TYPES THAT ARE SUBJECT TO
+  	 * TAXES FROM THE  civi_tax_contribution_type TABLE  
+  	 * PUT RESULTS IN AN ARRAY AND SEND TO THE VIEW 
+  	 */
+  	$sql = 'SELECT * FROM  civi_tax_contribution_type';
+  	$dao = CRM_Core_DAO::executeQuery($sql);
+  	$arr_tax_contribution_type = array();
+    $x = 0;
+    while( $dao->fetch( ) ) {   
+       	$arr_tax_contribution_type[$x]['tax_id'] = $dao->tax_id;
+       	$arr_tax_contribution_type[$x]['contribution_type_id'] = $dao->contribution_type_id;
+       	$x++;	
+    }
+  	$this->assign('arr_tax_contribution_type', $arr_tax_contribution_type);
+  	
+  	 
   
     // Set the page-title 
     CRM_Utils_System::setTitle(ts('CiviTax Settings'));
