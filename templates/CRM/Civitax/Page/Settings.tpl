@@ -1,8 +1,3 @@
-		{foreach from=$arr_tax_contribution_type key=tax_contribution_id item=tax_contribution_i}
-    		{if $tax_contribution_i.contribution_type_id == 2} checked {/if}
-    	{/foreach}
-
-
 <div id="civi-tax-message"></div>
 
 <h3>CiviCRM Tax Field Settings</h3>
