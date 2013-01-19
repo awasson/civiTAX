@@ -6,7 +6,6 @@ class CRM_Civitax_Page_Settings extends CRM_Core_Page {
   function run() {
   	
   	
-  	
 	/**
   	 * GET APPLICABLE CONTRIBUTION TYPES  
   	 * FROM THE civicrm_contribution_type TABLE

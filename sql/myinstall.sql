@@ -19,14 +19,7 @@ CREATE TABLE IF NOT EXISTS `civicrm`.`civi_tax_invoicing` (
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `civi_tax_contribution_type` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `tax_id` int(11) NOT NULL,
-  `contribution_type_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `idcivi_tax_contribution_type_UNIQUE` (`id`)
+  `contribution_type_id` int(11) NOT NULL
 ) ENGINE=InnoDB;
-
-
-
-
 
