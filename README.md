@@ -1,7 +1,9 @@
 civiTAX
 =======
 
-A civiCRM tax field extension
+Note: This extension is currently in development and is not ready for production.
+
+A civiCRM tax field extension 
 
 The civiTAX extension is the evolution of a modification (hack) that we made to a copy of civiCRM to add a tax field and reporting for purchasing of memberships and events.
 
