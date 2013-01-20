@@ -59,6 +59,112 @@ function civitax_civicrm_navigationMenu( &$params ) {
 
 
 /**
+ * Use hook_civicrm_buildForm 
+ * Identify type of contribution page 
+ * Insert statement indicating if a tax is applicable 
+ */
+function civitax_civicrm_buildForm($formName, $form) {
+	
+	switch($formName) {
+	
+		// CONTRIBUTION PAGES
+		case 'CRM_Contribute_Form_Contribution_Main':
+
+			$civitax_values = $form->getVar('_values');
+			$civitax_contribution_type_id = $civitax_values['contribution_type_id'];
+			
+			$sql = "SELECT civi_tax_type.tax FROM civi_tax_contribution_type INNER JOIN civi_tax_type ON civi_tax_type.id = civi_tax_contribution_type.tax_id WHERE contribution_type_id = " . $civitax_contribution_type_id;
+			$dao = CRM_Core_DAO::executeQuery($sql);
+			$str_taxes = "";
+			
+			switch($civitax_contribution_type_id) {
+			
+				case '1':
+					
+					if ($dao->N > 0) {
+						while( $dao->fetch( ) ) {   
+       						$str_taxes .= $dao->tax . "/";
+    					}
+    					$str_taxes = rtrim($str_taxes, "/"); //remove the extra '/'
+						$civitax_statement = "Donations are subject to $str_taxes Taxes";	
+					}
+					
+					break;
+					
+				case '2':
+				
+					if ($dao->N > 0) {
+						while( $dao->fetch( ) ) {   
+       						$str_taxes .= $dao->tax . "/";
+    					}
+    					$str_taxes = rtrim($str_taxes, "/"); //remove the extra '/'
+						$civitax_statement = "Memberships are subject to $str_taxes Taxes";	
+					}
+									
+					break;
+					
+				case '3':
+					
+					if ($dao->N > 0) {
+						while( $dao->fetch( ) ) {   
+       						$str_taxes .= $dao->tax . "/";
+    					}
+    					$str_taxes = rtrim($str_taxes, "/"); //remove the extra '/'
+						$civitax_statement = "Campaign Contributions are subject to $str_taxes Taxes";	
+					}
+										
+					break;
+					
+				default:
+					
+					break;
+			
+			}
+			
+			if ($dao->N > 0) {
+				CRM_Core_Region::instance('page-footer')->add(array(
+					'jquery' => "cj('.price_set-section').append('<span class=\'civitax-note\'>NOTE:</span> <span class=\'civitax-applicable-taxes\'>".$civitax_statement."</span>')",
+				));
+				// ADD STYLESHEET
+				CRM_Core_Resources::singleton()->addStyleFile('ca.lunahost.civitax', 'civitax_style.css');
+			}
+
+			break;
+			
+		
+		// EVENT PAGES	
+		case 'CRM_Event_Form_Registration_Register':
+		
+			$sql = "SELECT civi_tax_type.tax FROM civi_tax_contribution_type INNER JOIN civi_tax_type ON civi_tax_type.id = civi_tax_contribution_type.tax_id WHERE contribution_type_id = 4";
+			$dao = CRM_Core_DAO::executeQuery($sql);
+			$str_taxes = "";
+			
+			if ($dao->N > 0) {
+					while( $dao->fetch( ) ) {   
+       				$str_taxes .= $dao->tax . "/";
+    			}
+    			$str_taxes = rtrim($str_taxes, "/"); //remove the extra '/'
+				$civitax_statement = "Event fees are subject to $str_taxes Taxes";	
+				CRM_Core_Region::instance('page-footer')->add(array(
+					'jquery' => "cj('.price_set-section').append('<span class=\'civitax-note\'>NOTE: </span> <span class=\'civitax-applicable-taxes\'>".$civitax_statement."</span>')",
+				));
+				// ADD STYLESHEET
+				CRM_Core_Resources::singleton()->addStyleFile('ca.lunahost.civitax', 'civitax_style.css');
+			}
+
+			break;
+			
+			
+		default:
+					
+				break;
+	
+	}
+
+}
+
+
+/**
  * Implementation of hook_civicrm_install
  */
 function civitax_civicrm_install() {

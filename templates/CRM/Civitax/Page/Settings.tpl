@@ -132,7 +132,7 @@
   				data: { action : Action, tax_status : TaxStatus, tax_id : TaxID, contribution_type_id : ContributionID },
   				
   				success: function(data){
-    				jq("#civi-tax-message").html("<p><span class='civi-tax-status'>Update:</span> " + TaxName + "  is <span class='civi-tax-status-status'>" + TaxActive + "</span> for " + Contribution + " contributions.</span>.</p>");
+    				jq("#civi-tax-message").html("<p><span class='civi-tax-status'>Update:</span> " + TaxName + "  is <span class='civi-tax-status-status'>" + TaxActive + "</span> for " + Contribution + " contributions.</p>");
     				jq("#civi-tax-message").fadeIn('slow');
 					setTimeout(function(){
     					jq("#civi-tax-message").fadeOut("slow");
