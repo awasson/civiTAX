@@ -233,6 +233,7 @@
     			// Add Form fields
     			jq('.new-tax').fadeIn('slow');
   			}); 
+  			return false;
 		});
 		
 		// Cancel New Tax Form
@@ -241,6 +242,7 @@
 				jq('a#add_tax').fadeIn('slow');
     			jq('input.new-tax').val('');
   			}); 
+  			return false;
 		});
 		
 		// Insert New Tax
@@ -278,7 +280,7 @@
   				}
 			});
 			
-			
+			return false;
 		});
 		
 	});
