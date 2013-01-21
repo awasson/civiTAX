@@ -73,7 +73,7 @@ function civitax_civicrm_buildForm($formName, $form) {
 			$civitax_values = $form->getVar('_values');
 			$civitax_contribution_type_id = $civitax_values['contribution_type_id'];
 			
-			$sql = "SELECT civi_tax_type.tax FROM civi_tax_contribution_type INNER JOIN civi_tax_type ON civi_tax_type.id = civi_tax_contribution_type.tax_id WHERE contribution_type_id = " . $civitax_contribution_type_id;
+			$sql = "SELECT civi_tax_type.tax FROM civi_tax_contribution_type INNER JOIN civi_tax_type ON civi_tax_type.id = civi_tax_contribution_type.tax_id WHERE civi_tax_type.active = 1 AND contribution_type_id = " . $civitax_contribution_type_id;
 			$dao = CRM_Core_DAO::executeQuery($sql);
 			$str_taxes = "";
 			
@@ -86,7 +86,7 @@ function civitax_civicrm_buildForm($formName, $form) {
        						$str_taxes .= $dao->tax . "/";
     					}
     					$str_taxes = rtrim($str_taxes, "/"); //remove the extra '/'
-						$civitax_statement = "Donations are subject to $str_taxes Taxes";	
+						$civitax_statement = "Donations are subject to $str_taxes Tax";	
 					}
 					
 					break;
@@ -98,7 +98,7 @@ function civitax_civicrm_buildForm($formName, $form) {
        						$str_taxes .= $dao->tax . "/";
     					}
     					$str_taxes = rtrim($str_taxes, "/"); //remove the extra '/'
-						$civitax_statement = "Memberships are subject to $str_taxes Taxes";	
+						$civitax_statement = "Memberships are subject to $str_taxes Tax";	
 					}
 									
 					break;
@@ -110,7 +110,7 @@ function civitax_civicrm_buildForm($formName, $form) {
        						$str_taxes .= $dao->tax . "/";
     					}
     					$str_taxes = rtrim($str_taxes, "/"); //remove the extra '/'
-						$civitax_statement = "Campaign Contributions are subject to $str_taxes Taxes";	
+						$civitax_statement = "Campaign Contributions are subject to $str_taxes Tax";	
 					}
 										
 					break;
@@ -135,7 +135,7 @@ function civitax_civicrm_buildForm($formName, $form) {
 		// EVENT PAGES	
 		case 'CRM_Event_Form_Registration_Register':
 		
-			$sql = "SELECT civi_tax_type.tax FROM civi_tax_contribution_type INNER JOIN civi_tax_type ON civi_tax_type.id = civi_tax_contribution_type.tax_id WHERE contribution_type_id = 4";
+			$sql = "SELECT civi_tax_type.tax FROM civi_tax_contribution_type INNER JOIN civi_tax_type ON civi_tax_type.id = civi_tax_contribution_type.tax_id WHERE civi_tax_type.active = 1 AND contribution_type_id = 4";
 			$dao = CRM_Core_DAO::executeQuery($sql);
 			$str_taxes = "";
 			
@@ -144,7 +144,7 @@ function civitax_civicrm_buildForm($formName, $form) {
        				$str_taxes .= $dao->tax . "/";
     			}
     			$str_taxes = rtrim($str_taxes, "/"); //remove the extra '/'
-				$civitax_statement = "Event fees are subject to $str_taxes Taxes";	
+				$civitax_statement = "Event fees are subject to $str_taxes Tax";	
 				CRM_Core_Region::instance('page-footer')->add(array(
 					'jquery' => "cj('.price_set-section').append('<span class=\'civitax-note\'>NOTE: </span> <span class=\'civitax-applicable-taxes\'>".$civitax_statement."</span>')",
 				));
