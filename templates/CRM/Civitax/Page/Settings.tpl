@@ -47,6 +47,39 @@
 	  <td>edit</td>
 	</tr>	 
 	{/foreach}
+	<tr id="add_tax_row">
+	  <td>
+	    <a href="#" id="add_tax" class="button" title="Add New Tax">
+	      <span>
+	        <div class="icon dropdown-icon"></div>
+	        Add New Tax
+	      </span>
+	    </a>
+	    <input type="text" name="tax_name" id="tax_name" size="5" class="new-tax" />
+	  </td>
+	  <td>
+	    <input type="text" name="tax_rate" id="tax_rate" size="5" class="new-tax" />
+	  </td>
+	  <td>
+	    <input type="checkbox" checked="checked" name="tax_active" id="tax_active" class="new-tax">
+	  </td>
+	  <td>
+	    <span class="new-tax">
+	      <a href="#" id="insert_tax" class="button" title="Insert">
+	      <span>
+	        Insert
+	      </span>
+	    </a>
+	    </span>
+	    <span class="new-tax">
+	      <a href="#" id="cancel_tax" class="button" title="Cancel">
+	      <span>
+	        Cancel
+	      </span>
+	    </a>
+	    </span>
+	  </td>
+	</tr>
 </table>
 
 {literal}
@@ -97,6 +130,14 @@
     margin: 0.25em;
 }
 
+#crm-container .civi-tax-type td {
+	width: 25%;
+}
+
+#crm-container .new-tax {
+	display: none;
+}
+
 
 </style>
 
@@ -144,9 +185,8 @@
   				}
 			});
 			
-				
-		
 		});
+		
 		
 		// Change the 'active' state of existing taxes.
 		jq('.active-tax').change(function() {
@@ -183,6 +223,61 @@
     				jq("#civi-tax-message").html("<p><span class='civi-tax-status'>Error:</span> There was a problem changing this items status. <br/>Please refresh the page and try again.</p>");
   				}
 			});
+			
+		});
+		
+		
+		// New Tax Form
+		jq('a#add_tax').click(function() {
+			jq(this).fadeOut('fast', function() {
+    			// Add Form fields
+    			jq('.new-tax').fadeIn('slow');
+  			}); 
+		});
+		
+		// Cancel New Tax Form
+		jq('a#cancel_tax').click(function() {
+			jq('.new-tax').fadeOut('fast', function() {
+				jq('a#add_tax').fadeIn('slow');
+    			jq('input.new-tax').val('');
+  			}); 
+		});
+		
+		// Insert New Tax
+		jq('a#insert_tax').click(function() {
+		
+			var Action		= "insert_tax";
+			var TaxName		= jq('#tax_name').val();
+			var TaxRate		= jq('#tax_rate').val();	
+			var TaxStatus	= jq('#tax_active').attr('checked');	
+			
+			
+			jq.ajax({
+  				type: 'POST',
+  				url: '/civicrm/civitax/activate?reset=1&snippet=2',
+  				data: { action : Action , tax_name : TaxName, tax_rate : TaxRate, tax_status : TaxStatus },
+  				
+  				success: function(data){
+  				
+  					window.setTimeout('location.reload()', 0);
+  				
+  					jq('.new-tax').fadeOut('fast', function() {
+						jq('a#add_tax').fadeIn('slow');
+    					jq('input.new-tax').val('');
+  					}); 
+  					jq('.civi-tax-type tr:last').before('<tr><td>'+TaxName+'</td><td>'+TaxRate+'%</td><td><input type="checkbox" checked="checked" name="'+TaxName+'" class="active-tax"></td><td>edit</td></tr>');
+    				jq("#civi-tax-message").html("<p><span class='civi-tax-status'>Update:</span> " + TaxName + " has been added to the database.</p>");
+    				jq("#civi-tax-message").fadeIn('slow');
+					setTimeout(function(){
+    					jq("#civi-tax-message").fadeOut("slow");
+					},3000)
+  				},
+  				
+  				error: function(){
+    				jq("#civi-tax-message").html("<p><span class='civi-tax-status'>Error:</span> There was a problem inserting the new tax type. <br/>Please refresh the page and try again.</p>");
+  				}
+			});
+			
 			
 		});
 		

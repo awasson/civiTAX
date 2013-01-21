@@ -54,6 +54,24 @@ class CRM_Civitax_Page_Activate extends CRM_Core_Page {
   			
    				break;
    				
+   			case 'insert_tax':
+   				
+   				if(isset($_REQUEST['tax_name']) && isset($_REQUEST['tax_rate']) && isset($_REQUEST['tax_status'])) {
+   					
+   					$tax_name 	= $_REQUEST['tax_name'];
+   					$tax_rate	= $_REQUEST['tax_rate'];
+   					$tax_status = $_REQUEST['tax_status'];
+   					
+   					$sql = "INSERT INTO civi_tax_type(tax, rate, active) VALUES('".$tax_name."',".$tax_rate.",".$tax_status.")";
+  					$dao = CRM_Core_DAO::executeQuery($sql);
+   					
+   					$output = 1;
+	  			} else {
+					$output = 0;
+				} 
+   				
+   				break;
+   				
    			default:
    				break;
 		}
