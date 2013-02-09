@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `civicrm`.`civi_tax_invoicing` (
 
 CREATE TABLE IF NOT EXISTS `civi_tax_contribution_type` (
   `tax_id` int(11) NOT NULL,
-  `contribution_type_id` int(11) NOT NULL
+  `contribution_type_id` int(11) NOT NULL,
+  KEY `tax_id` (`tax_id`),
+  CONSTRAINT `civi_tax_contribution_type_ibfk_1` FOREIGN KEY (`tax_id`) REFERENCES `civi_tax_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
-

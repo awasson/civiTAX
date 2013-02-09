@@ -72,6 +72,22 @@ class CRM_Civitax_Page_Activate extends CRM_Core_Page {
    				
    				break;
    				
+   			case 'delete_tax':
+   				
+   				if(isset($_REQUEST['tax_id'])) {
+   					
+   					$tax_id	= $_REQUEST['tax_id'];
+   					
+   					$sql = "DELETE FROM civi_tax_type WHERE id = " . $tax_id;
+  					$dao = CRM_Core_DAO::executeQuery($sql);
+   					
+   					$output = 1;
+	  			} else {
+					$output = 0;
+				} 
+   				
+   				break;
+   			
    			default:
    				break;
 		}

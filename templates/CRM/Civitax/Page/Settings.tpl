@@ -44,7 +44,10 @@
 	  <td>
 	    <input class="active-tax" type="checkbox" name="{$tax_i.tax}" value="{$tax_i.id}" {if $tax_i.active == 1} checked="checked" {/if} />
 	    </td>
-	  <td>edit</td>
+	  <td>
+	    <a class="civi-tax-edit" name="{$tax_i.tax}">edit</a>
+	    <a class="civi-tax-edit-cancel">cancel</a>
+	  </td>
 	</tr>	 
 	{/foreach}
 	<tr id="add_tax_row">
@@ -83,69 +86,6 @@
 </table>
 
 {literal}
-
-<style type="text/css">
-
-#crm-container p {
-    font-family: Helvetica,Arial,Sans;
-    font-size: 0.9em;
-    margin: 1em 0.3em;
-}
-
-.civi-tax-contribution-type {
-    font-weight: bold;
-}
-
-.civi-tax-applicable-taxes {
-    font-size: 0.9em;
-}
-
-.civi-tax-checkboxes {
-	margin-right: 1em;
-}
-
-#crm-container .civi-tax-status {
-	font-weight: bold;
-}
-
-#crm-container .civi-tax-status-status {
-	text-decoration: underline;
-}
-
-#crm-container #civi-tax-message {
-    background-color: #CDE8FE;
-    border: 3px solid #48A9E4;
-    color: infotext;
-    font-family: Helvetica,Arial,Sans;
-    font-size: 0.9em;
-    font-style: italic;
-    padding: 5px 10px;
-    position: absolute;
-    top: -30px;
-    display: none;
-}
-
-#crm-container #civi-tax-message p {
-    font-size: 0.9em;
-    margin: 0.25em;
-}
-
-#crm-container .civi-tax-type td {
-	width: 25%;
-}
-
-#crm-container .new-tax {
-	display: none;
-}
-
-#crm-container .civi-tax-alert {
-	font-style: italic;
-	color: #990000;
-}
-
-
-</style>
-
 
 <script type="text/javascript">
 <!-- 
@@ -241,6 +181,7 @@
   			return false;
 		});
 		
+		
 		// Cancel New Tax Form
 		jq('a#cancel_tax').click(function() {
 			jq('.new-tax').fadeOut('fast', function() {
@@ -252,6 +193,79 @@
   			}); 
   			return false;
 		});
+		
+		
+		// Edit/Delete Tax
+		jq('.civi-tax-edit').click(function() {
+			if(jq(this).text() == 'edit') {
+				jq(this).text('delete');
+				jq(this).next('.civi-tax-edit-cancel').fadeIn('fast');
+			} else {
+			
+				var ThisObj = jq(this);
+				var Action  = "delete_tax";
+				var TaxName = jq(this).attr('name');
+				var TaxID   = jq(this).parent().prev('td').find('input').attr('value');
+				
+				//var TaxID   = jq(this).parent().prev('td').child(':input').attr('value');
+	 
+			
+				// Insert a modal window
+				jq('<div></div>').appendTo('body')
+        		.html('<div><p>Once a Tax has been removed, it cannot be restored<br/>without manually re-entering it. All references <br/>of it will be removed from the applicable taxes table. <br/>Please confirm this deletion.</p></div>')
+        		.dialog({
+                	modal: true, title: 'DELETE CONFIRMATION', zIndex: 10000, autoOpen: true,
+                	width: 'auto', resizable: false,
+                	buttons: {
+                    	Yes: function () {
+                    		jq(this).dialog("close");
+                    		//  Use Ajax to remove this tax type
+                    		jq.ajax({
+  								type: 'POST',
+  								url: '/civicrm/civitax/activate?reset=1&snippet=2',
+  								data: { action : Action , tax_name : TaxName , tax_id : TaxID},
+  				
+  								success: function(data){
+  								
+  									ThisObj.parent().parent().remove();
+                    				jq("label.civi-tax-checkboxes input." + TaxName).each(function() {
+										jq(this).parent().remove();
+									});
+  								
+    								jq("#civi-tax-message").html("<p><span class='civi-tax-status'>Update:</span> " + TaxName + " has been <span class='civi-tax-status-status'>removed</span> from the database.</p>");
+    								jq("#civi-tax-message").fadeIn('slow');
+									setTimeout(function(){
+    									jq("#civi-tax-message").fadeOut("slow");
+									},3000)
+  								},
+  				
+  								error: function(){
+    								jq("#civi-tax-message").html("<p><span class='civi-tax-status'>Error:</span> There was a problem removing this tax from the databases. <br/>Please refresh the page and try again.</p>");
+  								}
+							});
+
+                    		ThisObj.text('edit');
+                    		ThisObj.next('.civi-tax-edit-cancel').fadeOut('fast');
+                    	},
+                    	No: function () {
+                    		jq(this).dialog("close");
+                    		
+                    	}
+                	},
+                	close: function (event, ui) {
+                    	jq(this).remove();
+                	}
+        		});
+			}
+		}); 
+		
+		
+		// Cancel Delete Tax
+		jq('.civi-tax-edit-cancel').click(function() {
+			jq(this).prev('.civi-tax-edit').text('edit');
+			jq(this).fadeOut('fast');
+		});
+		
 		
 		// Insert New Tax
 		jq('a#insert_tax').click(function() {
