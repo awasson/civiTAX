@@ -87,6 +87,7 @@
 
 {literal}
 
+<style>
 /* Configuration Styles */
 #crm-container p {
     font-family: Helvetica,Arial,Sans;
@@ -158,6 +159,7 @@
 	font-style: italic;
 	color: #990000;
 }
+</style>
 
 <script type="text/javascript">
 <!-- 
