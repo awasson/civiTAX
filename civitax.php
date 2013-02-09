@@ -58,12 +58,34 @@ function civitax_civicrm_navigationMenu( &$params ) {
 }
 
 
+
+/**
+ * Use hook_civicrm_pageRun 
+ * Create a variable that points to the root directory of the extension
+ * Used to set a path to the CSS file
+ */
+function civitax_civicrm_pageRun( &$page ) {
+
+	$str_civitax_file = dirname(__FILE__);
+	$arr_civitax_file_path = explode('/',$str_civitax_file);
+	$civitax_count = count($arr_civitax_file_path);
+	$_SESSION['civitax_base'] = $arr_civitax_file_path[$civitax_count-1];
+
+}
+
 /**
  * Use hook_civicrm_buildForm 
  * Identify type of contribution page 
  * Insert statement indicating if a tax is applicable 
  */
 function civitax_civicrm_buildForm($formName, $form) {
+	
+	// Create a variable that points to the root directory of the extension
+ 	// Used to set a path to the CSS file
+	$str_civitax_file = dirname(__FILE__);
+	$arr_civitax_file_path = explode('/',$str_civitax_file);
+	$civitax_count = count($arr_civitax_file_path);
+	$_SESSION['civitax_base'] = $arr_civitax_file_path[$civitax_count-1];
 	
 	switch($formName) {
 	

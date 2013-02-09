@@ -7,3 +7,74 @@
 	font-weight: bold;
 }
 
+/* Configuration Styles */
+#crm-container p {
+    font-family: Helvetica,Arial,Sans;
+    font-size: 0.9em;
+    margin: 1em 0.3em;
+}
+
+.civi-tax-contribution-type {
+    font-weight: bold;
+}
+
+.civi-tax-applicable-taxes {
+    font-size: 0.9em;
+}
+
+.civi-tax-checkboxes {
+	margin-right: 1em;
+}
+
+#crm-container .civi-tax-status {
+	font-weight: bold;
+}
+
+#crm-container .civi-tax-status-status {
+	text-decoration: underline;
+}
+
+#crm-container #civi-tax-message {
+    background-color: #CDE8FE;
+    border: 3px solid #48A9E4;
+    color: infotext;
+    font-family: Helvetica,Arial,Sans;
+    font-size: 0.9em;
+    font-style: italic;
+    padding: 5px 10px;
+    position: absolute;
+    top: -30px;
+    display: none;
+}
+
+#crm-container #civi-tax-message p {
+    font-size: 0.9em;
+    margin: 0.25em;
+}
+
+#crm-container .civi-tax-type td {
+	width: 25%;
+}
+
+#crm-container .civi-tax-edit-cancel {
+	display: none;
+}
+
+#crm-container .civi-tax-edit,
+#crm-container .civi-tax-edit-cancel {
+    cursor: pointer;
+}
+
+#crm-container .civi-tax-edit:hover,
+#crm-container .civi-tax-edit-cancel:hover {
+	text-decoration: underline;
+}
+
+#crm-container .new-tax {
+	display: none;
+}
+
+#crm-container .civi-tax-alert {
+	font-style: italic;
+	color: #990000;
+}
