@@ -211,9 +211,7 @@
 	 
 			
 				// Insert a modal window
-				jq('<div></div>').appendTo('body')
-        		.html('<div><p>Once a Tax has been removed, it cannot be restored<br/>without manually re-entering it. All references <br/>of it will be removed from the applicable taxes table. <br/>Please confirm this deletion.</p></div>')
-        		.dialog({
+				jq('<div></div>').appendTo('body').html('<div><p>Once a Tax has been removed, it cannot be restored<br/>without manually re-entering it. All references <br/>of it will be removed from the applicable taxes table. <br/>Please confirm this deletion.</p></div>').dialog({
                 	modal: true, title: 'DELETE CONFIRMATION', zIndex: 10000, autoOpen: true,
                 	width: 'auto', resizable: false,
                 	buttons: {
