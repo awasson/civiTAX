@@ -148,7 +148,7 @@ function civitax_civicrm_buildForm($formName, $form) {
 					'jquery' => "cj('.price_set-section').append('<span class=\'civitax-note\'>NOTE:</span> <span class=\'civitax-applicable-taxes\'>".$civitax_statement."</span>')",
 				));
 				// ADD STYLESHEET
-				CRM_Core_Resources::singleton()->addStyleFile('ca.lunahost.civitax', 'civitax_style.css');
+				CRM_Core_Resources::singleton()->addStyleFile($_SESSION['civitax_base'], 'civitax_style.css');
 			}
 
 			break;
@@ -171,7 +171,7 @@ function civitax_civicrm_buildForm($formName, $form) {
 					'jquery' => "cj('.price_set-section').append('<span class=\'civitax-note\'>NOTE: </span> <span class=\'civitax-applicable-taxes\'>".$civitax_statement."</span>')",
 				));
 				// ADD STYLESHEET
-				CRM_Core_Resources::singleton()->addStyleFile('ca.lunahost.civitax', 'civitax_style.css');
+				CRM_Core_Resources::singleton()->addStyleFile($_SESSION['civitax_base'], 'civitax_style.css');
 			}
 
 			break;
