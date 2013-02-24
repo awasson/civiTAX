@@ -3,7 +3,7 @@ civiTAX
 
 Note: In order for this extension to work correctly it must be named ca.lunahost.civitax and placed into your extensions directory.
 
-This extension is currently in development and is not ready for production.
+This extension is currently in development and is not ready for production. I am still working on the applying and reporting of tax functions.
 
 A civiCRM tax field extension 
 
