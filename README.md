@@ -1,7 +1,9 @@
 civiTAX
 =======
 
-Note: This extension is currently in development and is not ready for production.
+Note: In order for this extension to work correctly it must be named ca.lunahost.civitax and placed into your extensions directory.
+
+This extension is currently in development and is not ready for production.
 
 A civiCRM tax field extension 
 
