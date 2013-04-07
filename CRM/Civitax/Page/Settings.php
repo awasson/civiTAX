@@ -6,8 +6,7 @@ class CRM_Civitax_Page_Settings extends CRM_Core_Page {
   function run() {
   	
   	// ADD STYLESHEET
-	$civitax_base = $_SESSION['civitax_base'];
-	CRM_Core_Resources::singleton()->addStyleFile($civitax_base, 'civitax_style.css');
+	CRM_Core_Resources::singleton()->addStyleFile('ca.lunahost.civitax', 'civitax_style.css');
   	
 	/**
   	 * GET APPLICABLE CONTRIBUTION TYPES  
