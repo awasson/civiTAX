@@ -1,6 +1,8 @@
 civiTAX
 =======
 
+MAY 27, 2013: THIS PROJECT IS ON HOLD DUE TO CHANGES IN CIVICRM CORE THAT MAY ENABLE A MORE INTEGRATED METHOD OF ADDING TAXES TO CIVICRM. I AM NOW DOING SOME R&D TO LOOK AT CIVIACCOUNTS AND SEE IF THEY CAN PROVIDE A MORE DIRECT APPROACH TO ADDING TAXES TO CIVICRM. IF YOU WOULD LIKE TO HELP WITH THIS PROJECT, PLEASE CONTACT ME.
+
 NOTE: In order for this extension to work correctly it must be named ca.lunahost.civitax and placed into your extensions directory.
 
 This extension is currently in development and is not ready for production. I am still working on the applying and reporting of tax functions.
