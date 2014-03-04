@@ -4,7 +4,9 @@
 }
 
 .civitax-note {
-	font-weight: bold;
+    display: inline-block;
+    font-weight: bold;
+    padding: 15px;
 }
 
 /* Configuration Styles */
@@ -45,6 +47,12 @@
     position: absolute;
     top: -30px;
     display: none;
+}
+
+#crm-container #civi-tax-message.isactive {
+    background-color: #75A469;
+    border: 3px solid #008000;
+    color: #FFFFFF;
 }
 
 #crm-container #civi-tax-message p {
