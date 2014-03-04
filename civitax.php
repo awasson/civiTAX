@@ -225,12 +225,15 @@ function civitax_civicrm_alterPaymentProcessorParams($paymentObj, &$rawParams, &
     	$limit = count($arr_contribution_type_ids);
     	for($x = 0; $x < $limit; $x++) {
     		$tax_id = $arr_contribution_type_ids[$x]['id'];
-    		$sql = "SELECT * FROM civi_tax_type WHERE id = " . $tax_id;
+    		$sql = "SELECT * FROM civi_tax_type WHERE id = $tax_id";
     		$dao = CRM_Core_DAO::executeQuery($sql);
     		$dao->fetch();    		
     		$tax_name = $dao->tax;
     		$tax_rate = ($dao->rate * .01);
     		$tax_active = $dao->active;
+    		
+    		// GET RID OF BUG WITH INNACIVE TAXES CARRYING FORWARD THE POST TAX VALUE
+    		// MAY HAVE TO LOAD ALL TAX REPORTING INTO AN ARRAY, WEED OUT INNACTIVES AND THEN LOOP INTO THE DATABASE
     		
     		// IF THE TAX IS ACTIVE...
     		if($tax_active == 1) {
@@ -239,9 +242,9 @@ function civitax_civicrm_alterPaymentProcessorParams($paymentObj, &$rawParams, &
     			$tax_charged = $pre_tax * $tax_rate;
     			$total_tax += $tax_charged;
     			
-    			// IF THE TRANSACTION HAS MULTIPLE TAXES CARRY post_tax VALUE UNTIL FINAL CALCULATION
+    			// IF THE TRANSACTION HAS MULTIPLE TAXES CARRY post_tax VALUE UNTIL FINAL CALCULATION    			
     			if($x < ($limit - 1)) {
-    				$post_tax = "carried";
+    				$post_tax = "carried forward";
     			} else {
     				$post_tax = $pre_tax + $total_tax;
     			}
