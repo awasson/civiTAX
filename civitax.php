@@ -202,8 +202,7 @@ function civitax_civicrm_alterPaymentProcessorParams($paymentObj, &$rawParams, &
     $financial_type_id = $dao->id;
     
     /**
-     * GET TAX ID
-     * LOOP FOR MULTIPLE TAXES 
+     * GET TAX ID OR ID'S
      */  
 	$sql = "SELECT * FROM civi_tax_contribution_type WHERE contribution_type_id = $financial_type_id";
     $dao = CRM_Core_DAO::executeQuery($sql);
@@ -220,29 +219,47 @@ function civitax_civicrm_alterPaymentProcessorParams($paymentObj, &$rawParams, &
      */
     if($x > 0 && is_array($arr_contribution_type_ids)) {
     
-    	//LOOP THROUGH TAXES
-    	$total_tax = 0;
+    	//LOOP THROUGH TAXES AND CREATE ARRAY OF VALUES FOR REPORTING
+    	$y = 0;
     	$limit = count($arr_contribution_type_ids);
+    	$arr_reporting = array();
     	for($x = 0; $x < $limit; $x++) {
     		$tax_id = $arr_contribution_type_ids[$x]['id'];
     		$sql = "SELECT * FROM civi_tax_type WHERE id = $tax_id";
     		$dao = CRM_Core_DAO::executeQuery($sql);
-    		$dao->fetch();    		
-    		$tax_name = $dao->tax;
-    		$tax_rate = ($dao->rate * .01);
+    		$dao->fetch();   
+
     		$tax_active = $dao->active;
     		
-    		// GET RID OF BUG WITH INNACIVE TAXES CARRYING FORWARD THE POST TAX VALUE
-    		// MAY HAVE TO LOAD ALL TAX REPORTING INTO AN ARRAY, WEED OUT INNACTIVES AND THEN LOOP INTO THE DATABASE
-    		
-    		// IF THE TAX IS ACTIVE...
+    		/**
+    		 * We have to ignore any innactive taxes so
+    		 * Loop through $arr_contribution_type_ids 
+    		 * and create an array to insert into civi_tax_invoicing 
+    		 * If $tax_active == 0 then ignore it entirely
+    		 */
     		if($tax_active == 1) {
-    
-    			// Calculate taxes
-    			$tax_charged = $pre_tax * $tax_rate;
+    			$arr_reporting[$y]['tax_id'] 		= $tax_id;
+    			$arr_reporting[$y]['tax_name'] 		= $dao->tax;
+    			$arr_reporting[$y]['tax_rate'] 		= ($dao->rate * .01);
+    			$arr_reporting[$y]['tax_charged'] 	= ($dao->rate * .01) * $pre_tax;
+    			$y++;
+    		}
+    	
+    	}
+    	
+    	// If we have an array of taxes to report, loop through and report them
+    	$total_tax = 0;
+    	if($y > 0 && is_array($arr_reporting)) {
+    		$limit = count($arr_reporting);
+    		for($x = 0; $x < $limit; $x++) {
+    			
+    			$tax_id 		= $arr_reporting[$x]['tax_id'];
+    			$tax_name 		= $arr_reporting[$x]['tax_name'];
+    			$tax_rate 		= $arr_reporting[$x]['tax_rate'];
+    			$tax_charged 	= $arr_reporting[$x]['tax_charged'];
+    			
     			$total_tax += $tax_charged;
     			
-    			// IF THE TRANSACTION HAS MULTIPLE TAXES CARRY post_tax VALUE UNTIL FINAL CALCULATION    			
     			if($x < ($limit - 1)) {
     				$post_tax = "carried forward";
     			} else {
@@ -253,11 +270,10 @@ function civitax_civicrm_alterPaymentProcessorParams($paymentObj, &$rawParams, &
     			$sql = "INSERT INTO civi_tax_invoicing(invoice_id, tax_id, tax_name, pre_tax, tax_rate, tax_charged, post_tax) VALUES('".$invoice_id."', ".$tax_id.", '".$tax_name."', '".$pre_tax."', '".$tax_rate."', '".$tax_charged."', '".$post_tax."')";
     			$dao2 = CRM_Core_DAO::executeQuery($sql);
     		
-    		}
     		
-    	
+    		}
+
     	}
-    	
     	/**
     	 * Apply the $post_tax value to the $cookedParams array 
     	 * so that the processor charges the total with tax
