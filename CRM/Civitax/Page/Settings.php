@@ -2,18 +2,39 @@
 
 require_once 'CRM/Core/Page.php';
 
+/**
+ * For testing 
+ *
+    print "rawParams info: "; 
+    print "<div id='rawparams' style='display:none;'><pre>";
+    print_r($_SESSION['rawParams']);
+    print "</pre></div>";
+
+    print "cookedParams info: "; 
+    print "<div id='cookedparams' style='display:none;'><pre>";
+    print_r($_SESSION['cookedParams']);
+    print "</pre></div>";
+
+    print "paymentObj info: "; 
+    print "<div id='paymentobj' style='display:none;'><pre>";
+    print_r($_SESSION['paymentObj']);
+    print "</pre></div>";
+ *
+ */
+
 class CRM_Civitax_Page_Settings extends CRM_Core_Page {
   function run() {
   	
   	// ADD STYLESHEET
 	CRM_Core_Resources::singleton()->addStyleFile('ca.lunahost.civitax', 'civitax_style.css');
+
   	
 	/**
   	 * GET APPLICABLE CONTRIBUTION TYPES  
-  	 * FROM THE civicrm_contribution_type TABLE
+  	 * FROM THE civicrm_financial_type TABLE
   	 * PUT RESULTS IN AN ARRAY AND SEND TO THE VIEW 
   	 */
-  	$sql = 'SELECT * FROM civicrm_contribution_type';
+  	$sql = 'SELECT * FROM civicrm_financial_type';
   	$dao = CRM_Core_DAO::executeQuery($sql);
   	$arr_contribution_types = array();
     $x = 0;
