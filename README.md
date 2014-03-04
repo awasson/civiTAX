@@ -1,13 +1,33 @@
-civiTAX
-=======
+civiTAX: A civiCRM tax field extension 
+=====================================
 
-MAY 27, 2013: THIS PROJECT IS ON HOLD DUE TO CHANGES IN CIVICRM CORE THAT MAY ENABLE A MORE INTEGRATED METHOD OF ADDING TAXES TO CIVICRM. I AM NOW DOING SOME R&D TO LOOK AT CIVIACCOUNTS AND SEE IF THEY CAN PROVIDE A MORE DIRECT APPROACH TO ADDING TAXES TO CIVICRM. IF YOU WOULD LIKE TO HELP WITH THIS PROJECT, PLEASE CONTACT ME.
+MARCH 3, 2014: THE CIVICRM TAX EXTENSION PROJECT IS BACK ON TRACK.
 
-NOTE: This extension was designed for CiviCRM 4.2.x In order for this extension to work correctly it must be named ca.lunahost.civitax and placed into your extensions directory.
+NOTE: 	This extension has been updated for CiviCRM 4.3.x and higher 
+		In order for this extension to work correctly it must be named ca.lunahost.civitax and placed into your extensions directory.
 
-This extension is currently in development and is not ready for production. I am still working on the applying and reporting of tax functions.
+This extension is currently in development and is not ready for production. 
 
-A civiCRM tax field extension 
+The following features are functional.
+
+Settings: Tax management is controlled via the CiviTAX settings page which is available once the extension has been installed. From the settings page you can:
+ - Create, Delete, Activate or Suspend tax types 
+ - You can apply your taxes to any of the Contributions types
+ - You may have one or more taxes and apply them
+ 
+ Once taxes have been activated they will be applied to the transaction at the point of confirmation when the transaction is confirmed and CiviCRM passes the transaction to the processor.
+ 
+ This extension keeps a record of transactions in the database which will be used for reporting.
+ 
+ The following Features have not been added
+
+  - Reporting: Has not been added yet
+  - Editing Taxes: You can delete a tax but you can not edit yet 
+
+
+
+BACKGROUND
+==========
 
 The civiTAX extension is the evolution of a modification (hack) that we made to a copy of civiCRM to add a tax field and reporting for purchasing of memberships and events.
 
