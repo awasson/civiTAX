@@ -187,7 +187,7 @@ function civitax_civicrm_alterPaymentProcessorParams($paymentObj, &$rawParams, &
      
     // TESTING: Throw the $paymentObj into a session to inspect. 
     // $_SESSION['rawParams'] = $rawParams;
-    $_SESSION['cookedParams'] = $cookedParams;
+    // $_SESSION['cookedParams'] = $cookedParams;
     // $_SESSION['paymentObj'] = $paymentObj;
     
     // Grab transaction variables from the $rawParams array.
