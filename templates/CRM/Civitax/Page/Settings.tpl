@@ -2,8 +2,8 @@
 
 <h3>CiviCRM Tax Field Settings</h3>
 
-<p><strong>Select applicable taxes for contribution types from the table below.</strong>
-<br/><em>NOTE: If a tax type has been disabled it will not be applied to contribution transactions even if it appears checked. Only active taxes will be applied to transactions.</em></p>
+<p><strong>Select applicable taxes for contribution types from the table below.</strong></p>
+<p><em><strong>NOTE:</strong> If a tax type has been disabled it will not be applied to contribution transactions even if it appears checked. Only active taxes will be applied to transactions.</em></p>
 
 <table class="civi-tax-contribution-type" cellpadding="0" cellspacing="0" border="0">
   <tr>
@@ -89,44 +89,46 @@
 
 <script type="text/javascript">
 <!-- 
-	var jq = jQuery.noConflict();
 	
 	jQuery(function(){
 	
 		// Change which taxes apply to contribution types
-		jq('.civi-tax-checkboxes input').change(function() {
+		jQuery('.civi-tax-checkboxes input').change(function() {
 			
 			var Action				= "set_tax";
-			var ArrTaxEnt			= jq(this).attr('id').split("_");
-			var ArrContributionEnt	= jq(this).attr('name').split("_");
+			var ArrTaxEnt			= jQuery(this).attr('id').split("_");
+			var ArrContributionEnt	= jQuery(this).attr('name').split("_");
 			var Contribution		= ArrTaxEnt[0];
 			var ContributionID		= ArrContributionEnt[1];
 			var TaxName				= ArrTaxEnt[1];
-			var TaxID				= jq(this).attr('value');	
-			var TaxStatus			= jq(this).attr('checked');	
+			var TaxID				= jQuery(this).attr('value');	
+			var TaxStatus			= jQuery(this).attr('checked');	
 			
 			var TaxActive;
 			if(TaxStatus==true) {
 				TaxActive = 'Active';
+				TaxActiveClass = 'isactive';
 			} else {
 				TaxActive = 'Disabled';
+				TaxActiveClass = 'isdisabled';
 			}
 			
-			jq.ajax({
+			jQuery.ajax({
   				type: 'POST',
   				url: '/civicrm/civitax/activate?reset=1&snippet=2',
   				data: { action : Action, tax_status : TaxStatus, tax_id : TaxID, contribution_type_id : ContributionID },
   				
   				success: function(data){
-    				jq("#civi-tax-message").html("<p><span class='civi-tax-status'>Update:</span> " + TaxName + "  is <span class='civi-tax-status-status'>" + TaxActive + "</span> for " + Contribution + " contributions.</p>");
-    				jq("#civi-tax-message").fadeIn('slow');
+  				    jQuery("#civi-tax-message").removeClass();
+    				jQuery("#civi-tax-message").html("<p><span class='civi-tax-status'>Update:</span> " + TaxName + "  is <span class='civi-tax-status-status'>" + TaxActive + "</span> for " + Contribution + " contributions.</p>").addClass(TaxActiveClass);
+    				jQuery("#civi-tax-message").fadeIn('slow');
 					setTimeout(function(){
-    					jq("#civi-tax-message").fadeOut("slow");
+    					jQuery("#civi-tax-message").fadeOut("slow");
 					},5000)
   				},
   				
   				error: function(){
-    				jq("#civi-tax-message").html("<p><span class='civi-tax-status'>Error:</span> There was a problem changing this items status. <br/>Please refresh the page and try again.</p>");
+    				jQuery("#civi-tax-message").html("<p><span class='civi-tax-status'>Error:</span> There was a problem changing this items status. <br/>Please refresh the page and try again.</p>");
   				}
 			});
 			
@@ -134,38 +136,41 @@
 		
 		
 		// Change the 'active' state of existing taxes.
-		jq('.active-tax').change(function() {
+		jQuery('.active-tax').change(function() {
 			
 			var Action = "activate_tax";
-			var TaxID = jq(this).attr('value');
-			var TaxName = jq(this).attr('name');		
-			var TaxStatus = jq(this).attr('checked');
+			var TaxID = jQuery(this).attr('value');
+			var TaxName = jQuery(this).attr('name');		
+			var TaxStatus = jQuery(this).attr('checked');
 			
 			var TaxActive;
 			if(TaxStatus==true) {
 				TaxActive = 'Active';
-				jq("input." + TaxName).removeAttr("disabled");
+				TaxActiveClass = 'isactive';
+				jQuery("input." + TaxName).removeAttr("disabled");
 			} else {
 				TaxActive = 'Disabled';
-				jq("input." + TaxName).attr("disabled", true);
+				TaxActiveClass = 'isdisabled';
+				jQuery("input." + TaxName).attr("disabled", true);
 			}
 			
   			
-  			jq.ajax({
+  			jQuery.ajax({
   				type: 'POST',
   				url: '/civicrm/civitax/activate?reset=1&snippet=2',
   				data: { action : Action , tax_status : TaxStatus, tax_id : TaxID, tax_name : TaxName },
   				
   				success: function(data){
-    				jq("#civi-tax-message").html("<p><span class='civi-tax-status'>Update:</span> " + TaxName + " tax is now <span class='civi-tax-status-status'>" + TaxActive + "</span>.</p>");
-    				jq("#civi-tax-message").fadeIn('slow');
+  				    jQuery("#civi-tax-message").removeClass();
+    				jQuery("#civi-tax-message").html("<p><span class='civi-tax-status'>Update:</span> " + TaxName + " tax is now <span class='civi-tax-status-status'>" + TaxActive + "</span>.</p>").addClass(TaxActiveClass);
+    				jQuery("#civi-tax-message").fadeIn('slow');
 					setTimeout(function(){
-    					jq("#civi-tax-message").fadeOut("slow");
+    					jQuery("#civi-tax-message").fadeOut("slow");
 					},3000)
   				},
   				
   				error: function(){
-    				jq("#civi-tax-message").html("<p><span class='civi-tax-status'>Error:</span> There was a problem changing this items status. <br/>Please refresh the page and try again.</p>");
+    				jQuery("#civi-tax-message").html("<p><span class='civi-tax-status'>Error:</span> There was a problem changing this items status. <br/>Please refresh the page and try again.</p>");
   				}
 			});
 			
@@ -173,22 +178,22 @@
 		
 		
 		// New Tax Form
-		jq('a#add_tax').click(function() {
-			jq(this).fadeOut('fast', function() {
+		jQuery('a#add_tax').click(function() {
+			jQuery(this).fadeOut('fast', function() {
     			// Add Form fields
-    			jq('.new-tax').fadeIn('slow');
+    			jQuery('.new-tax').fadeIn('slow');
   			}); 
   			return false;
 		});
 		
 		
 		// Cancel New Tax Form
-		jq('a#cancel_tax').click(function() {
-			jq('.new-tax').fadeOut('fast', function() {
-				jq('a#add_tax').fadeIn('slow');
-    			jq('input.new-tax').val('');
-    			jq(".civi-tax-alert").each(function() {
-					jq(this).remove();
+		jQuery('a#cancel_tax').click(function() {
+			jQuery('.new-tax').fadeOut('fast', function() {
+				jQuery('a#add_tax').fadeIn('slow');
+    			jQuery('input.new-tax').val('');
+    			jQuery(".civi-tax-alert").each(function() {
+					jQuery(this).remove();
 				});
   			}); 
   			return false;
@@ -196,29 +201,29 @@
 		
 		
 		// Edit/Delete Tax
-		jq('.civi-tax-edit').click(function() {
-			if(jq(this).text() == 'edit') {
-				jq(this).text('delete');
-				jq(this).next('.civi-tax-edit-cancel').fadeIn('fast');
+		jQuery('.civi-tax-edit').click(function() {
+			if(jQuery(this).text() == 'edit') {
+				jQuery(this).text('delete');
+				jQuery(this).next('.civi-tax-edit-cancel').fadeIn('fast');
 			} else {
 			
-				var ThisObj = jq(this);
+				var ThisObj = jQuery(this);
 				var Action  = "delete_tax";
-				var TaxName = jq(this).attr('name');
-				var TaxID   = jq(this).parent().prev('td').find('input').attr('value');
+				var TaxName = jQuery(this).attr('name');
+				var TaxID   = jQuery(this).parent().prev('td').find('input').attr('value');
 				
-				//var TaxID   = jq(this).parent().prev('td').child(':input').attr('value');
+				//var TaxID   = jQuery(this).parent().prev('td').child(':input').attr('value');
 	 
 			
-				// Insert a modal window
-				jq('<div></div>').appendTo('body').html('<div><p>Once a Tax has been removed, it cannot be restored<br/>without manually re-entering it. All references <br/>of it will be removed from the applicable taxes table. <br/>Please confirm this deletion.</p></div>').dialog({
+				// Insert a modal window - USE CiviCRM jQuery (cj) not Drupal's (jQuery)
+				cj('<div></div>').appendTo('body').html('<div><p>Once a Tax has been removed, it cannot be restored<br/>without manually re-entering it. All references <br/>of it will be removed from the applicable taxes table. <br/>Please confirm this deletion.</p></div>').dialog({
                 	modal: true, title: 'DELETE CONFIRMATION', zIndex: 10000, autoOpen: true,
                 	width: 'auto', resizable: false,
                 	buttons: {
                     	Yes: function () {
-                    		jq(this).dialog("close");
+                    		cj(this).dialog("close");
                     		//  Use Ajax to remove this tax type
-                    		jq.ajax({
+                    		jQuery.ajax({
   								type: 'POST',
   								url: '/civicrm/civitax/activate?reset=1&snippet=2',
   								data: { action : Action , tax_name : TaxName , tax_id : TaxID},
@@ -226,19 +231,20 @@
   								success: function(data){
   								
   									ThisObj.parent().parent().remove();
-                    				jq("label.civi-tax-checkboxes input." + TaxName).each(function() {
-										jq(this).parent().remove();
+                    				jQuery("label.civi-tax-checkboxes input." + TaxName).each(function() {
+										jQuery(this).parent().remove();
 									});
-  								
-    								jq("#civi-tax-message").html("<p><span class='civi-tax-status'>Update:</span> " + TaxName + " has been <span class='civi-tax-status-status'>removed</span> from the database.</p>");
-    								jq("#civi-tax-message").fadeIn('slow');
+									
+  								    jQuery("#civi-tax-message").removeClass();
+    								jQuery("#civi-tax-message").html("<p><span class='civi-tax-status'>Update:</span> " + TaxName + " has been <span class='civi-tax-status-status'>removed</span> from the database.</p>");
+    								jQuery("#civi-tax-message").fadeIn('slow');
 									setTimeout(function(){
-    									jq("#civi-tax-message").fadeOut("slow");
+    									jQuery("#civi-tax-message").fadeOut("slow");
 									},3000)
   								},
   				
   								error: function(){
-    								jq("#civi-tax-message").html("<p><span class='civi-tax-status'>Error:</span> There was a problem removing this tax from the databases. <br/>Please refresh the page and try again.</p>");
+    								jQuery("#civi-tax-message").html("<p><span class='civi-tax-status'>Error:</span> There was a problem removing this tax from the databases. <br/>Please refresh the page and try again.</p>");
   								}
 							});
 
@@ -246,12 +252,12 @@
                     		ThisObj.next('.civi-tax-edit-cancel').fadeOut('fast');
                     	},
                     	No: function () {
-                    		jq(this).dialog("close");
+                    		cj(this).dialog("close");
                     		
                     	}
                 	},
                 	close: function (event, ui) {
-                    	jq(this).remove();
+                    	jQuery(this).remove();
                 	}
         		});
 			}
@@ -259,77 +265,80 @@
 		
 		
 		// Cancel Delete Tax
-		jq('.civi-tax-edit-cancel').click(function() {
-			jq(this).prev('.civi-tax-edit').text('edit');
-			jq(this).fadeOut('fast');
+		jQuery('.civi-tax-edit-cancel').click(function() {
+			jQuery(this).prev('.civi-tax-edit').text('edit');
+			jQuery(this).fadeOut('fast');
 		});
 		
 		
 		// Insert New Tax
-		jq('a#insert_tax').click(function() {
+		jQuery('a#insert_tax').click(function() {
 		
 		
 			// Validate the inputs	
-			jq(".civi-tax-alert").each(function() {
-				jq(this).remove();
+			jQuery(".civi-tax-alert").each(function() {
+				jQuery(this).remove();
 			});
 			
 			var IsValid = 0;
 			
-			jq( ".civi-tax-required" ).each(function() {
-				if(jq(this).val()=="") {
-					jq(this).after(' <span class="civi-tax-alert">Required Field</span>');
+			jQuery( ".civi-tax-required" ).each(function() {
+				if(jQuery(this).val()=="") {
+					jQuery(this).after(' <span class="civi-tax-alert">Required Field</span>');
 					IsValid ++;
 				}
 			});
 			
-			jq( ".civi-tax-numeric" ).each(function() {
+			jQuery( ".civi-tax-numeric" ).each(function() {
 							
-				if(jq(this).val() != "") {
-    				var value = jq(this).val().replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+				if(jQuery(this).val() != "") {
+    				var value = jQuery(this).val().replace(/^\s\s*/, '').replace(/\s\s*$/, '');
     				var intRegex = /^\d+$/;
     				if(!intRegex.test(value)) {
-        				jq(this).after(' <span class="civi-tax-alert">Numeric Field</span>');
+        				jQuery(this).after(' <span class="civi-tax-alert">Numeric Field</span>');
         				IsValid ++;
     				}
 				} else {
-    				jq(this).after(' <span class="civi-tax-alert">Required Field</span>');
+    				jQuery(this).after(' <span class="civi-tax-alert">Required Field</span>');
     				IsValid ++;
 				}
 
 			});
 		
 			var Action		= "insert_tax";
-			var TaxName		= jq('#tax_name').val();
-			var TaxRate		= jq('#tax_rate').val();	
-			var TaxStatus	= jq('#tax_active').attr('checked');	
+			var TaxName		= jQuery('#tax_name').val();
+			var TaxRate		= jQuery('#tax_rate').val();	
+			var TaxStatus	= jQuery('#tax_active').attr('checked');	
 			
 			/*			*/
 			
 			if(IsValid == 0) {
-				jq.ajax({
+				jQuery.ajax({
   					type: 'POST',
   					url: '/civicrm/civitax/activate?reset=1&snippet=2',
   					data: { action : Action , tax_name : TaxName, tax_rate : TaxRate, tax_status : TaxStatus },
   					
   					success: function(data){
   					
+  					    TaxActiveClass = 'isactive';
+  					
   						window.setTimeout('location.reload()', 0);
   					
-  						jq('.new-tax').fadeOut('fast', function() {
-							jq('a#add_tax').fadeIn('slow');
-    						jq('input.new-tax').val('');
+  						jQuery('.new-tax').fadeOut('fast', function() {
+							jQuery('a#add_tax').fadeIn('slow');
+    						jQuery('input.new-tax').val('');
   						}); 
-  						jq('.civi-tax-type tr:last').before('<tr><td>'+TaxName+'</td><td>'+TaxRate+'%</td><td><input type="checkbox" checked="checked" name="'+TaxName+'" class="active-tax"></td><td>edit</td></tr>');
-    					jq("#civi-tax-message").html("<p><span class='civi-tax-status'>Update:</span> " + TaxName + " has been added to the database.</p>");
-    					jq("#civi-tax-message").fadeIn('slow');
+  						jQuery('.civi-tax-type tr:last').before('<tr><td>'+TaxName+'</td><td>'+TaxRate+'%</td><td><input type="checkbox" checked="checked" name="'+TaxName+'" class="active-tax"></td><td>edit</td></tr>');
+    					jQuery("#civi-tax-message").removeClass();
+    					jQuery("#civi-tax-message").html("<p><span class='civi-tax-status'>Update:</span> " + TaxName + " has been added to the database.</p>").addClass(TaxActiveClass);
+    					jQuery("#civi-tax-message").fadeIn('slow');
 						setTimeout(function(){
-    						jq("#civi-tax-message").fadeOut("slow");
+    						jQuery("#civi-tax-message").fadeOut("slow");
 						},3000)
   					},
   				
   					error: function(){
-    					jq("#civi-tax-message").html("<p><span class='civi-tax-status'>Error:</span> There was a problem inserting the new tax type. <br/>Please refresh the page and try again.</p>");
+    					jQuery("#civi-tax-message").html("<p><span class='civi-tax-status'>Error:</span> There was a problem inserting the new tax type. <br/>Please refresh the page and try again.</p>");
   					}
 				});
 			}
