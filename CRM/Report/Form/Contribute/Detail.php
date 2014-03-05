@@ -365,6 +365,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     	
     	// ADD pre_tax FIELD
     	$this->_columns['civicrm_contribution']['fields']['pre_tax']['title'] = 'Pre Tax Amount';
+    	$this->_columns['civicrm_contribution']['fields']['pre_tax']['default'] = TRUE;
     	
     	// ADD DYNAMIC TAX FIELDS
         $limit = count($arr_taxes);
@@ -373,12 +374,13 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
           	$tax_name = "tax_$tax_value";
           	$tax_name = strtolower("$tax_name");
           	$array[$tax_name]['title'] = $tax_value;
-          	$this->_columns['civicrm_contribution']['fields'][$tax_name]['title'] = $tax_value; 	
+          	$this->_columns['civicrm_contribution']['fields'][$tax_name]['title'] = $tax_value . " Tax";
+          	$this->_columns['civicrm_contribution']['fields'][$tax_name]['default'] = TRUE; 	
         } 
        
        // ADD THE total_amount FIELD BACK  
        $this->_columns['civicrm_contribution']['fields']['total_amount']['title'] = 'Amount';  
-       $this->_columns['civicrm_contribution']['fields']['total_amount']['required'] = 0;  
+       $this->_columns['civicrm_contribution']['fields']['total_amount']['required'] = 1;  
        $this->_columns['civicrm_contribution']['fields']['total_amount']['statistics']['sum'] = 'Amount';
     } 
     // CIVI_TAX END: PUSH CUSTOM TAX FIELDS INTO ARRAY   
