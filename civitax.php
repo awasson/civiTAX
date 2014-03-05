@@ -277,6 +277,7 @@ function civitax_civicrm_alterPaymentProcessorParams($paymentObj, &$rawParams, &
     	 	 * Apply the $post_tax value to the $cookedParams array 
     	 	 * so that the processor charges the total with tax
     	 	 */
+    	 	$rawParams['amount'] = $post_tax;
     	 	$cookedParams['amount'] = $post_tax;
 
     	}
