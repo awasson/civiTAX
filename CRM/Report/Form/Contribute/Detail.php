@@ -179,6 +179,17 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
         ),
         'grouping' => 'contact-fields',
       ),
+      
+      
+    // CIVI_TAX ADDITION:
+	'tax_invoicing' => array( 
+		'dao' => 'CRM_Core_DAO_TaxInvoicing', 
+		'fields' => array(),
+		'grouping' => 'contact-fields',
+	),
+	// CIVI_TAX END:
+
+      
       'civicrm_contribution' =>
       array(
         'dao' => 'CRM_Contribute_DAO_Contribution',
@@ -359,13 +370,10 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     
     	// REMOVE NET VALUE
     	unset($this->_columns['civicrm_contribution']['fields']['net_amount']);
-    	
-    	// TEMPORARILY REMOVE THE total_amount FIELD
-    	unset($this->_columns['civicrm_contribution']['fields']['total_amount']);
-    	
+    	    	
     	// ADD pre_tax FIELD
-    	$this->_columns['civicrm_contribution']['fields']['pre_tax']['title'] = 'Pre Tax Amount';
-    	$this->_columns['civicrm_contribution']['fields']['pre_tax']['default'] = TRUE;
+    	$this->_columns['tax_invoicing']['fields']['pre_tax']['title'] = 'Pre Tax Amount';
+    	$this->_columns['tax_invoicing']['fields']['pre_tax']['default'] = TRUE;
     	
     	// ADD DYNAMIC TAX FIELDS
         $limit = count($arr_taxes);
@@ -374,14 +382,10 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
           	$tax_name = "tax_$tax_value";
           	$tax_name = strtolower("$tax_name");
           	$array[$tax_name]['title'] = $tax_value;
-          	$this->_columns['civicrm_contribution']['fields'][$tax_name]['title'] = $tax_value . " Tax";
-          	$this->_columns['civicrm_contribution']['fields'][$tax_name]['default'] = TRUE; 	
+          	$this->_columns['tax_invoicing']['fields'][$tax_name]['title'] = $tax_value . " Tax";
+          	$this->_columns['tax_invoicing']['fields'][$tax_name]['default'] = TRUE; 	
         } 
-       
-       // ADD THE total_amount FIELD BACK  
-       $this->_columns['civicrm_contribution']['fields']['total_amount']['title'] = 'Amount';  
-       $this->_columns['civicrm_contribution']['fields']['total_amount']['required'] = 1;  
-       $this->_columns['civicrm_contribution']['fields']['total_amount']['statistics']['sum'] = 'Amount';
+        
     } 
     // CIVI_TAX END: PUSH CUSTOM TAX FIELDS INTO ARRAY   
 
@@ -493,6 +497,18 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
               INNER JOIN (SELECT c.id, IF(COUNT(oc.id) = 0, 0, 1) AS ordinality FROM civicrm_contribution c LEFT JOIN civicrm_contribution oc ON c.contact_id = oc.contact_id AND oc.receive_date < c.receive_date GROUP BY c.id) {$this->_aliases['civicrm_contribution_ordinality']}
                       ON {$this->_aliases['civicrm_contribution_ordinality']}.id = {$this->_aliases['civicrm_contribution']}.id";
     }
+    
+    // CIVI_TAX ADDITION: INSERT LEFT JOIN ON TAX INVOICING TABLE
+    /*
+    $this->_from .= "
+    	LEFT JOIN civi_tax_invoicing {$this->_aliases['civi_tax_invoicing']} 
+    		ON {$this->_aliases['civicrm_contribution']}.invoice_id = {$this->_aliases['civi_tax_invoicing']}.invoice_id
+    		LEFT JOIN  civicrm_phone {$this->_aliases['civicrm_phone']}
+    			ON ({$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_phone']}.contact_id 
+    			AND {$this->_aliases['civicrm_phone']}.is_primary = 1)";
+    */
+    // CIVI_TAX END: INSERT LEFT JOIN ON TAX INVOICING TABLE
+    
 
     $this->addPhoneFromClause();
 
