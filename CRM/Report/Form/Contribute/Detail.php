@@ -182,7 +182,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
       
       
     // CIVI_TAX ADDITION:
-	'tax_invoicing' => array( 
+	'civi_tax_invoicing' => array( 
 		'dao' => 'CRM_Core_DAO_TaxInvoicing', 
 		'fields' => array(),
 		'grouping' => 'contact-fields',
@@ -372,8 +372,8 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     	unset($this->_columns['civicrm_contribution']['fields']['net_amount']);
     	    	
     	// ADD pre_tax FIELD
-    	$this->_columns['tax_invoicing']['fields']['pre_tax']['title'] = 'Pre Tax Amount';
-    	$this->_columns['tax_invoicing']['fields']['pre_tax']['default'] = TRUE;
+    	$this->_columns['civi_tax_invoicing']['fields']['pre_tax']['title'] = 'Pre Tax Amount';
+    	$this->_columns['civi_tax_invoicing']['fields']['pre_tax']['default'] = TRUE;
     	
     	// ADD DYNAMIC TAX FIELDS
         $limit = count($arr_taxes);
@@ -382,8 +382,8 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
           	$tax_name = "tax_$tax_value";
           	$tax_name = strtolower("$tax_name");
           	$array[$tax_name]['title'] = $tax_value;
-          	$this->_columns['tax_invoicing']['fields'][$tax_name]['title'] = $tax_value . " Tax";
-          	$this->_columns['tax_invoicing']['fields'][$tax_name]['default'] = TRUE; 	
+          	$this->_columns['civi_tax_invoicing']['fields'][$tax_name]['title'] = $tax_value . " Tax";
+          	$this->_columns['civi_tax_invoicing']['fields'][$tax_name]['default'] = TRUE; 	
         } 
         
     } 
@@ -499,16 +499,21 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     }
     
     // CIVI_TAX ADDITION: INSERT LEFT JOIN ON TAX INVOICING TABLE
+    // print "<pre>";
+    // print_r($this->_aliases['civi_tax_invoicing']);
+    // print "</pre>";
+    
     /*
+
     $this->_from .= "
     	LEFT JOIN civi_tax_invoicing {$this->_aliases['civi_tax_invoicing']} 
     		ON {$this->_aliases['civicrm_contribution']}.invoice_id = {$this->_aliases['civi_tax_invoicing']}.invoice_id
     		LEFT JOIN  civicrm_phone {$this->_aliases['civicrm_phone']}
     			ON ({$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_phone']}.contact_id 
     			AND {$this->_aliases['civicrm_phone']}.is_primary = 1)";
+    			
     */
     // CIVI_TAX END: INSERT LEFT JOIN ON TAX INVOICING TABLE
-    
 
     $this->addPhoneFromClause();
 
@@ -558,7 +563,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
                         {$this->_aliases['civicrm_entity_batch']}.entity_table = 'civicrm_financial_trxn')
                  LEFT JOIN civicrm_batch {$this->_aliases['civicrm_batch']}
                         ON {$this->_aliases['civicrm_batch']}.id = {$this->_aliases['civicrm_entity_batch']}.batch_id";
-    }
+    }    
 
   }
 

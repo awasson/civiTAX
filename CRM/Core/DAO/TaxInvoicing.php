@@ -51,13 +51,6 @@ class CRM_Core_DAO_TaxInvoicing extends CRM_Core_DAO
    */
   static $_fields = null;
   /**
-   * static instance to hold the keys used in $_fields for each field.
-   *
-   * @var array
-   * @static
-   */
-  static $_fieldKeys = null;
-  /**
    * static instance to hold the FK relationships
    *
    * @var string
@@ -89,24 +82,53 @@ class CRM_Core_DAO_TaxInvoicing extends CRM_Core_DAO
    */
   static $_log = false;
   /**
-   * Component ID
+   * Unique Tax Invoice ID
    *
    * @var int unsigned
    */
   public $id;
   /**
-   * Name of the component.
+   * Invoice ID
    *
-   * @var string
+   * @var varchar
    */
-  public $name;
+  public $invoice_id;
   /**
-   * Path to components main directory in a form of a class
-   namespace.
+   * Unique Tax ID
    *
-   * @var string
+   * @var int unsigned
    */
-  public $namespace;
+  public $tax_id;
+  /**
+   * Name of Tax
+   *
+   * @var varchar
+   */
+  public $tax_name;
+  /**
+   * Before tax is added.
+   *
+   * @var varchar
+   */
+  public $pre_tax;
+  /**
+   * Tax rate
+   *
+   * @var varchar
+   */
+  public $tax_rate;
+  /**
+   * Tax amount charged
+   *
+   * @var varchar
+   */
+  public $tax_charged;
+  /**
+   * After tax is charged
+   *
+   * @var varchar
+   */
+  public $post_tax;
   /**
    * class constructor
    *
@@ -115,8 +137,23 @@ class CRM_Core_DAO_TaxInvoicing extends CRM_Core_DAO
    */
   function __construct()
   {
-    // $this->__table = 'civicrm_component';
+    $this->__table = 'civi_tax_invoicing';
     parent::__construct();
+  }
+  /**
+   * return foreign links
+   *
+   * @access public
+   * @return array
+   */
+  function &links()
+  {
+    if (!(self::$_links)) {
+      self::$_links = array(
+        'civi_tax_invoicing_id' => 'civi_tax_invoicing:id',
+      );
+    }
+    return self::$_links;
   }
   /**
    * returns all the column names of this table
@@ -133,26 +170,39 @@ class CRM_Core_DAO_TaxInvoicing extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
         ) ,
-        'name' => array(
-          'name' => 'name',
+        'invoice_id' => array(
+          'name' => 'invoice_id',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Component name') ,
-          'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
         ) ,
-        'namespace' => array(
-          'name' => 'namespace',
+        'tax_id' => array(
+          'name' => 'tax_id',
+          'type' => CRM_Utils_Type::T_INT,
+        ) ,
+        'tax_name' => array(
+          'name' => 'tax_name',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Namespace reserved for component.') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
+        ) ,
+        'pre_tax' => array(
+          'name' => 'pre_tax',
+          'type' => CRM_Utils_Type::T_STRING,
+        ) ,
+        'tax_rate' => array(
+          'name' => 'tax_rate',
+          'type' => CRM_Utils_Type::T_STRING,
+        ) ,
+        'tax_charged' => array(
+          'name' => 'tax_charged',
+          'type' => CRM_Utils_Type::T_STRING,
+        ) ,
+        'post_tax' => array(
+          'name' => 'post_tax',
+          'type' => CRM_Utils_Type::T_STRING,
         ) ,
       );
     }
     return self::$_fields;
   }
-  /**
+    /**
    * Returns an array containing, for each field, the arary key used for that
    * field in self::$_fields.
    *
@@ -164,9 +214,14 @@ class CRM_Core_DAO_TaxInvoicing extends CRM_Core_DAO
     if (!(self::$_fieldKeys)) {
       self::$_fieldKeys = array(
         'id' => 'id',
-        'name' => 'name',
-        'namespace' => 'namespace',
-      );
+        'invoice_id' => 'invoice_id',
+        'tax_id' => 'tax_id',
+        'tax_name' => 'tax_name',
+        'pre_tax' => 'pre_tax',
+        'tax_rate' => 'tax_rate',
+        'tax_charged' => 'tax_charged',
+        'post_tax' => 'post_tax',
+     );
     }
     return self::$_fieldKeys;
   }
@@ -190,7 +245,7 @@ class CRM_Core_DAO_TaxInvoicing extends CRM_Core_DAO
   function getLog()
   {
     return self::$_log;
-  }
+  }  
   /**
    * returns the list of fields that can be imported
    *
@@ -206,7 +261,7 @@ class CRM_Core_DAO_TaxInvoicing extends CRM_Core_DAO
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['component'] = & $fields[$name];
+            self::$_import['civi_tax_invoicing'] = & $fields[$name];
           } else {
             self::$_import[$name] = & $fields[$name];
           }
@@ -230,7 +285,7 @@ class CRM_Core_DAO_TaxInvoicing extends CRM_Core_DAO
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['component'] = & $fields[$name];
+            self::$_export['civi_tax_invoicing'] = & $fields[$name];
           } else {
             self::$_export[$name] = & $fields[$name];
           }
