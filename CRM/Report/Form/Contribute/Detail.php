@@ -181,13 +181,13 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
       ),
       
       
-    // CIVI_TAX ADDITION:
+    // CIVI_TAX ADDITION: ADD ARRAY FOR TAX INVOICING
 	'civi_tax_invoicing' => array( 
 		'dao' => 'CRM_Core_DAO_TaxInvoicing', 
 		'fields' => array(),
 		'grouping' => 'contact-fields',
 	),
-	// CIVI_TAX END:
+	// CIVI_TAX END: ADD ARRAY FOR TAX INVOICING
 
       
       'civicrm_contribution' =>
@@ -245,8 +245,12 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
 
           'total_amount' => array('title' => ts('Amount'),
             'required' => TRUE,
-            'statistics' =>
-            array('sum' => ts('Amount')),
+            /**
+             * Remove the sum operation from this field
+             * somehow the tax thing messes it up
+             */  
+            //	'statistics' =>
+            //	array('sum' => ts('Amount')),
           ),
         ),
         'filters' =>
@@ -387,7 +391,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
         } 
         
     } 
-    // CIVI_TAX END: PUSH CUSTOM TAX FIELDS INTO ARRAY   
+    // CIVI_TAX END: PUSH CUSTOM TAX FIELDS INTO ARRAY
 
     $this->_tagFilter = TRUE;
 
@@ -453,7 +457,6 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
         }
       }
     }
-
     parent::select();
   }
 
@@ -497,23 +500,6 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
               INNER JOIN (SELECT c.id, IF(COUNT(oc.id) = 0, 0, 1) AS ordinality FROM civicrm_contribution c LEFT JOIN civicrm_contribution oc ON c.contact_id = oc.contact_id AND oc.receive_date < c.receive_date GROUP BY c.id) {$this->_aliases['civicrm_contribution_ordinality']}
                       ON {$this->_aliases['civicrm_contribution_ordinality']}.id = {$this->_aliases['civicrm_contribution']}.id";
     }
-    
-    // CIVI_TAX ADDITION: INSERT LEFT JOIN ON TAX INVOICING TABLE
-    // print "<pre>";
-    // print_r($this->_aliases['civi_tax_invoicing']);
-    // print "</pre>";
-    
-    /*
-
-    $this->_from .= "
-    	LEFT JOIN civi_tax_invoicing {$this->_aliases['civi_tax_invoicing']} 
-    		ON {$this->_aliases['civicrm_contribution']}.invoice_id = {$this->_aliases['civi_tax_invoicing']}.invoice_id
-    		LEFT JOIN  civicrm_phone {$this->_aliases['civicrm_phone']}
-    			ON ({$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_phone']}.contact_id 
-    			AND {$this->_aliases['civicrm_phone']}.is_primary = 1)";
-    			
-    */
-    // CIVI_TAX END: INSERT LEFT JOIN ON TAX INVOICING TABLE
 
     $this->addPhoneFromClause();
 
@@ -563,8 +549,14 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
                         {$this->_aliases['civicrm_entity_batch']}.entity_table = 'civicrm_financial_trxn')
                  LEFT JOIN civicrm_batch {$this->_aliases['civicrm_batch']}
                         ON {$this->_aliases['civicrm_batch']}.id = {$this->_aliases['civicrm_entity_batch']}.batch_id";
-    }    
-
+    }
+    
+    // CIVI_TAX ADDITION: INSERT LEFT JOIN ON TAX INVOICING TABLE
+    $this->_from .= "
+    	LEFT JOIN civi_tax_invoicing {$this->_aliases['civi_tax_invoicing']} 
+    		ON {$this->_aliases['civicrm_contribution']}.invoice_id = {$this->_aliases['civi_tax_invoicing']}.invoice_id COLLATE utf8_unicode_ci";
+    // CIVI_TAX END: INSERT LEFT JOIN ON TAX INVOICING TABLE   
+    
   }
 
   function groupBy() {
@@ -653,6 +645,7 @@ GROUP BY {$this->_aliases['civicrm_contribution']}.currency";
 
     // 1. use main contribution query to build temp table 1
     $sql = $this->buildQuery();
+
     $tempQuery = 'CREATE TEMPORARY TABLE civireport_contribution_detail_temp1 AS ' . $sql;
     CRM_Core_DAO::executeQuery($tempQuery);
     $this->setPager();
