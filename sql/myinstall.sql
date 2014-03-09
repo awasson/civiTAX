@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `civi_tax_type` (
   `active` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id` ASC)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB; CHARSET=utf8 COLLATE=utf8_unicode_ci$$
 
 
 
@@ -20,7 +20,7 @@ CREATE TABLE `civi_tax_invoicing` (
   `post_tax` varchar(45) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) 
-) ENGINE = InnoDB;
+) ENGINE = InnoDB; CHARSET=utf8 COLLATE=utf8_unicode_ci$$
 
 
 
@@ -29,4 +29,4 @@ CREATE TABLE IF NOT EXISTS `civi_tax_contribution_type` (
   `contribution_type_id` int(11) NOT NULL,
   KEY `tax_id` (`tax_id`),
   CONSTRAINT `civi_tax_contribution_type_ibfk_1` FOREIGN KEY (`tax_id`) REFERENCES `civi_tax_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB; CHARSET=utf8 COLLATE=utf8_unicode_ci$$
