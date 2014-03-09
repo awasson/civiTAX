@@ -370,7 +370,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     
     
     // CIVI_TAX ADDITION: PUSH CUSTOM TAX FIELDS INTO ARRAY   
-    if(is_array($arr_taxes)) {
+    if(isset($arr_taxes) && is_array($arr_taxes)) {
     
     	// REMOVE NET VALUE
     	unset($this->_columns['civicrm_contribution']['fields']['net_amount']);
@@ -998,17 +998,18 @@ WHERE  civicrm_contribution_contribution_id={$row['civicrm_contribution_contribu
   
   // CIVI_TAX ADDITION: CHANGE THE ORDER OF THE COLUMNS 
   	function modifyColumnHeaders( ) {
-		$oldHeaders = $this->_columnHeaders;
-		unset($this->_columnHeaders['civi_tax_invoicing_pre_tax']);
-		unset($this->_columnHeaders['civi_tax_invoicing_tax_charged_sum']);
-		unset($this->_columnHeaders['civicrm_contribution_total_amount']);
-		unset($this->_columnHeaders['civicrm_address_country_id']);
+  		if(isset($arr_taxes) && is_array($arr_taxes)) {
+			$oldHeaders = $this->_columnHeaders;
+			unset($this->_columnHeaders['civi_tax_invoicing_pre_tax']);
+			unset($this->_columnHeaders['civi_tax_invoicing_tax_charged_sum']);
+			unset($this->_columnHeaders['civicrm_contribution_total_amount']);
+			unset($this->_columnHeaders['civicrm_address_country_id']);
 
-		$this->_columnHeaders['civi_tax_invoicing_pre_tax'] = $oldHeaders['civi_tax_invoicing_pre_tax'];
-		$this->_columnHeaders['civi_tax_invoicing_tax_charged_sum'] = $oldHeaders['civi_tax_invoicing_tax_charged_sum'];
-		$this->_columnHeaders['civicrm_contribution_total_amount'] = $oldHeaders['civicrm_contribution_total_amount'];
-		$this->_columnHeaders['civicrm_address_country_id'] = $oldHeaders['civicrm_address_country_id'];
-		
+			$this->_columnHeaders['civi_tax_invoicing_pre_tax'] = $oldHeaders['civi_tax_invoicing_pre_tax'];
+			$this->_columnHeaders['civi_tax_invoicing_tax_charged_sum'] = $oldHeaders['civi_tax_invoicing_tax_charged_sum'];
+			$this->_columnHeaders['civicrm_contribution_total_amount'] = $oldHeaders['civicrm_contribution_total_amount'];
+			$this->_columnHeaders['civicrm_address_country_id'] = $oldHeaders['civicrm_address_country_id'];
+		}
 	}
   // CIVI_TAX END: CHANGE THE ORDER OF THE COLUMNS 
 
