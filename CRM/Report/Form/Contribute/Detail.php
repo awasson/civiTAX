@@ -390,8 +390,19 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
           	$this->_columns['civi_tax_invoicing']['fields'][$tax_name]['default'] = TRUE; 	
         } 
         
+        // ADD SUM(tax_charged) FIELD
+    	$this->_columns['civi_tax_invoicing']['fields']['tax_charged']['title'] = 'Total Tax Charged';
+    	$this->_columns['civi_tax_invoicing']['fields']['tax_charged']['default'] = TRUE;
+    	$this->_columns['civi_tax_invoicing']['fields']['tax_charged']['statistics']['sum'] = 'Total Tax Charged';
+        
     } 
     // CIVI_TAX END: PUSH CUSTOM TAX FIELDS INTO ARRAY
+    
+    // CIVI_TAX TESTING
+    print "<div class='columns_array' style='display:none;'><pre>";
+    print_r($this->_columns);
+    print "</pre></div>";
+    // CIVI_TAX TESTING
 
     $this->_tagFilter = TRUE;
 
@@ -645,6 +656,12 @@ GROUP BY {$this->_aliases['civicrm_contribution']}.currency";
 
     // 1. use main contribution query to build temp table 1
     $sql = $this->buildQuery();
+    
+    // CIVI_TAX TESTING
+    print "<div class='sql_string' style='display:none;'><pre>";
+    print_r($sql);
+    print "</pre></div>";
+    // CIVI_TAX TESTING
 
     $tempQuery = 'CREATE TEMPORARY TABLE civireport_contribution_detail_temp1 AS ' . $sql;
     CRM_Core_DAO::executeQuery($tempQuery);
@@ -979,34 +996,21 @@ WHERE  civicrm_contribution_contribution_id={$row['civicrm_contribution_contribu
     }
   }
   
-  
-  // LUNA ADDED FOR TAX REPORTING
-  /*
-	function modifyColumnHeaders( ) {
-		$this->_columnHeaders['tax_invoicing_pre_tax']['type'] = 1024;
-		$this->_columnHeaders['tax_invoicing_tax_charge']['type'] = 1024;
-
+  // CIVI_TAX ADDITION: CHANGE THE ORDER OF THE COLUMNS 
+  	function modifyColumnHeaders( ) {
 		$oldHeaders = $this->_columnHeaders;
-		//print_r($oldHeaders);
-		unset($this->_columnHeaders['tax_invoicing_pre_tax']);
-		unset($this->_columnHeaders['tax_invoicing_tax_charge']);
-		unset($this->_columnHeaders['civicrm_contribution_fee_amount']);
-		if (isset($this->_columnHeaders['civicrm_contribution_net_amount'])) {
-			unset($this->_columnHeaders['civicrm_contribution_net_amount']);
-		}
-		unset($this->_columnHeaders['civicrm_contribution_total_amount_sum']);
-		$this->_columnHeaders['tax_invoicing_pre_tax'] = $oldHeaders['tax_invoicing_pre_tax'];
-		$this->_columnHeaders['tax_invoicing_tax_charge'] = $oldHeaders['tax_invoicing_tax_charge'];
-		$this->_columnHeaders['civicrm_contribution_fee_amount'] = $oldHeaders['civicrm_contribution_fee_amount'];
-		if (isset($this->_columnHeaders['civicrm_contribution_net_amount'])) {
-			$this->_columnHeaders['civicrm_contribution_net_amount'] = $oldHeaders['civicrm_contribution_net_amount'];
-		}
-		$this->_columnHeaders['civicrm_contribution_total_amount_sum'] = $oldHeaders['civicrm_contribution_total_amount_sum'];
+		unset($this->_columnHeaders['civi_tax_invoicing_pre_tax']);
+		unset($this->_columnHeaders['civi_tax_invoicing_tax_charged_sum']);
+		unset($this->_columnHeaders['civicrm_contribution_total_amount']);
+		unset($this->_columnHeaders['civicrm_address_country_id']);
+
+		$this->_columnHeaders['civi_tax_invoicing_pre_tax'] = $oldHeaders['civi_tax_invoicing_pre_tax'];
+		$this->_columnHeaders['civi_tax_invoicing_tax_charged_sum'] = $oldHeaders['civi_tax_invoicing_tax_charged_sum'];
+		$this->_columnHeaders['civicrm_contribution_total_amount'] = $oldHeaders['civicrm_contribution_total_amount'];
+		$this->_columnHeaders['civicrm_address_country_id'] = $oldHeaders['civicrm_address_country_id'];
+		
 	}
-  */
-  // LUNA END ADDED FOR TAX REPORTING
-  
-  
-  
+  // CIVI_TAX END: CHANGE THE ORDER OF THE COLUMNS 
+
 }
 
