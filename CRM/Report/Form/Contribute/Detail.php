@@ -381,14 +381,29 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     	
     	// ADD DYNAMIC TAX FIELDS
         $limit = count($arr_taxes);
+        
+        // TEMPORARY DISABLE INDIVIDUAL UNTIL REPORTING WORKS 
+        $script_str = "";
+        
         for($x = 0; $x < $limit; $x++) {
           	$tax_value = $arr_taxes[$x]['tax_name'];
           	$tax_name = "tax_$tax_value";
           	$tax_name = strtolower("$tax_name");
           	$array[$tax_name]['title'] = $tax_value;
           	$this->_columns['civi_tax_invoicing']['fields'][$tax_name]['title'] = $tax_value . " Tax";
-          	$this->_columns['civi_tax_invoicing']['fields'][$tax_name]['default'] = TRUE; 	
+          	$this->_columns['civi_tax_invoicing']['fields'][$tax_name]['default'] = TRUE;
+          	
+          	// TEMPORARY DISABLE INDIVIDUAL UNTIL REPORTING WORKS 	          	
+          	$script_str .= "cj('#fields_" . $tax_name . "').attr('disabled', 'disabled');\n";
+          	
         } 
+        
+        // TEMPORARY DISABLE INDIVIDUAL UNTIL REPORTING WORKS 
+        print "<script>";
+        print "cj( document ).ready(function() {";
+        print $script_str;
+        print "});";
+        print "</script>";
         
         // ADD SUM(tax_charged) FIELD
     	$this->_columns['civi_tax_invoicing']['fields']['tax_charged']['title'] = 'Total Tax Charged';
