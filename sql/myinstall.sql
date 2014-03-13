@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `civi_tax_type` (
 
 
 
-CREATE TABLE `civi_tax_invoicing` (
+CREATE TABLE IF NOT EXISTS `civi_tax_invoicing` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `invoice_id` varchar(255) NOT NULL DEFAULT '0',
   `tax_id` int(11) NOT NULL,
