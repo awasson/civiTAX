@@ -107,10 +107,12 @@
 			var TaxActive;
 			if(TaxStatus==true) {
 				TaxActive = 'Active';
-				TaxActiveClass = 'isactive';
+				TaxActiveClass = 'success';
+				NotificationTitle = "Update";
 			} else {
 				TaxActive = 'Disabled';
-				TaxActiveClass = 'isdisabled';
+				TaxActiveClass = 'alert';
+				NotificationTitle = "Alert";
 			}
 			
 			jQuery.ajax({
@@ -119,16 +121,27 @@
   				data: { action : Action, tax_status : TaxStatus, tax_id : TaxID, contribution_type_id : ContributionID },
   				
   				success: function(data){
-  				    jQuery("#civi-tax-message").removeClass();
-    				jQuery("#civi-tax-message").html("<p><span class='civi-tax-status'>Update:</span> " + TaxName + "  is <span class='civi-tax-status-status'>" + TaxActive + "</span> for " + Contribution + " contributions.</p>").addClass(TaxActiveClass);
-    				jQuery("#civi-tax-message").fadeIn('slow');
+  					cj('#crm-notification-container').empty();
+					cj('#crm-notification-container').html('<div class="' + TaxActiveClass + ' ui-notify-message ui-notify-message-style" style=""><div title="close" class="icon ui-notify-close"> </div><a title="close" href="#" class="ui-notify-cross ui-notify-close">x</a><h1>' + NotificationTitle + '</h1><div class="notify-content">' + TaxName + '  is ' + TaxActive + ' for ' + Contribution + ' contributions.</div></div>');
+					cj('#crm-notification-container').fadeIn('slow');
 					setTimeout(function(){
-    					jQuery("#civi-tax-message").fadeOut("slow");
-					},5000)
+    					cj('#crm-notification-container').fadeOut('slow');
+					},7000);
+					cj('.ui-notify-cross.ui-notify-close').click(function(){
+    					cj('#crm-notification-container').fadeOut('slow');
+					});
   				},
   				
   				error: function(){
-    				jQuery("#civi-tax-message").html("<p><span class='civi-tax-status'>Error:</span> There was a problem changing this items status. <br/>Please refresh the page and try again.</p>");
+  					cj('#crm-notification-container').empty();
+					cj('#crm-notification-container').html('<div class="alert ui-notify-message ui-notify-message-style" style=""><div title="close" class="icon ui-notify-close"> </div><a title="close" href="#" class="ui-notify-cross ui-notify-close">x</a><h1>Error</h1><div class="notify-content">There was a problem changing this items status. <br/>Please refresh the page and try again.</div></div>');
+					cj('#crm-notification-container').fadeIn('slow');
+					setTimeout(function(){
+    					cj('#crm-notification-container').fadeOut('slow');
+					},7000);
+					cj('.ui-notify-cross.ui-notify-close').click(function(){
+    					cj('#crm-notification-container').fadeOut('slow');
+					});
   				}
 			});
 			
@@ -146,11 +159,13 @@
 			var TaxActive;
 			if(TaxStatus==true) {
 				TaxActive = 'Active';
-				TaxActiveClass = 'isactive';
+				TaxActiveClass = 'success';
+				NotificationTitle = "Update";
 				jQuery("input." + TaxName).removeAttr("disabled");
 			} else {
 				TaxActive = 'Disabled';
-				TaxActiveClass = 'isdisabled';
+				TaxActiveClass = 'alert';
+				NotificationTitle = "Alert";
 				jQuery("input." + TaxName).attr("disabled", true);
 			}
 			
@@ -161,16 +176,29 @@
   				data: { action : Action , tax_status : TaxStatus, tax_id : TaxID, tax_name : TaxName },
   				
   				success: function(data){
-  				    jQuery("#civi-tax-message").removeClass();
-    				jQuery("#civi-tax-message").html("<p><span class='civi-tax-status'>Update:</span> " + TaxName + " tax is now <span class='civi-tax-status-status'>" + TaxActive + "</span>.</p>").addClass(TaxActiveClass);
-    				jQuery("#civi-tax-message").fadeIn('slow');
+  				
+  					cj('#crm-notification-container').empty();
+					cj('#crm-notification-container').html('<div class="' + TaxActiveClass + ' ui-notify-message ui-notify-message-style" style=""><div title="close" class="icon ui-notify-close"> </div><a title="close" href="#" class="ui-notify-cross ui-notify-close">x</a><h1>' + NotificationTitle + '</h1><div class="notify-content">' + TaxName + ' tax is now ' + TaxActive + ' for all contributions.</div></div>');
+					cj('#crm-notification-container').fadeIn('slow');
 					setTimeout(function(){
-    					jQuery("#civi-tax-message").fadeOut("slow");
-					},3000)
+    					cj('#crm-notification-container').fadeOut('slow');
+					},7000);
+					cj('.ui-notify-cross.ui-notify-close').click(function(){
+    					cj('#crm-notification-container').fadeOut('slow');
+					});
   				},
   				
   				error: function(){
-    				jQuery("#civi-tax-message").html("<p><span class='civi-tax-status'>Error:</span> There was a problem changing this items status. <br/>Please refresh the page and try again.</p>");
+  					
+  					cj('#crm-notification-container').empty();
+					cj('#crm-notification-container').html('<div class="alert ui-notify-message ui-notify-message-style" style=""><div title="close" class="icon ui-notify-close"> </div><a title="close" href="#" class="ui-notify-cross ui-notify-close">x</a><h1>Error</h1><div class="notify-content">There was a problem changing this items status. <br/>Please refresh the page and try again.</div></div>');
+					cj('#crm-notification-container').fadeIn('slow');
+					setTimeout(function(){
+    					cj('#crm-notification-container').fadeOut('slow');
+					},7000);
+					cj('.ui-notify-cross.ui-notify-close').click(function(){
+    					cj('#crm-notification-container').fadeOut('slow');
+					});
   				}
 			});
 			
@@ -235,16 +263,28 @@
 										jQuery(this).parent().remove();
 									});
 									
-  								    jQuery("#civi-tax-message").removeClass();
-    								jQuery("#civi-tax-message").html("<p><span class='civi-tax-status'>Update:</span> " + TaxName + " has been <span class='civi-tax-status-status'>removed</span> from the database.</p>");
-    								jQuery("#civi-tax-message").fadeIn('slow');
+									cj('#crm-notification-container').empty();
+									cj('#crm-notification-container').html('<div class="alert ui-notify-message ui-notify-message-style" style=""><div title="close" class="icon ui-notify-close"> </div><a title="close" href="#" class="ui-notify-cross ui-notify-close">x</a><h1>Alert</h1><div class="notify-content">' + TaxName + ' has been removed from the database.</div></div>');
+									cj('#crm-notification-container').fadeIn('slow');
 									setTimeout(function(){
-    									jQuery("#civi-tax-message").fadeOut("slow");
-									},3000)
+    									cj('#crm-notification-container').fadeOut('slow');
+									},7000);
+									cj('.ui-notify-cross.ui-notify-close').click(function(){
+    									cj('#crm-notification-container').fadeOut('slow');
+									});	
   								},
   				
   								error: function(){
-    								jQuery("#civi-tax-message").html("<p><span class='civi-tax-status'>Error:</span> There was a problem removing this tax from the databases. <br/>Please refresh the page and try again.</p>");
+  									
+  									cj('#crm-notification-container').empty();
+									cj('#crm-notification-container').html('<div class="alert ui-notify-message ui-notify-message-style" style=""><div title="close" class="icon ui-notify-close"> </div><a title="close" href="#" class="ui-notify-cross ui-notify-close">x</a><h1>Error</h1><div class="notify-content">There was a problem removing this tax from the databases. <br/>Please refresh the page and try again.</div></div>');
+									cj('#crm-notification-container').fadeIn('slow');
+									setTimeout(function(){
+    									cj('#crm-notification-container').fadeOut('slow');
+									},7000);
+									cj('.ui-notify-cross.ui-notify-close').click(function(){
+    									cj('#crm-notification-container').fadeOut('slow');
+									});
   								}
 							});
 
@@ -319,9 +359,7 @@
   					data: { action : Action , tax_name : TaxName, tax_rate : TaxRate, tax_status : TaxStatus },
   					
   					success: function(data){
-  					
-  					    TaxActiveClass = 'isactive';
-  					
+
   						window.setTimeout('location.reload()', 0);
   					
   						jQuery('.new-tax').fadeOut('fast', function() {
@@ -329,16 +367,30 @@
     						jQuery('input.new-tax').val('');
   						}); 
   						jQuery('.civi-tax-type tr:last').before('<tr><td>'+TaxName+'</td><td>'+TaxRate+'%</td><td><input type="checkbox" checked="checked" name="'+TaxName+'" class="active-tax"></td><td>edit</td></tr>');
-    					jQuery("#civi-tax-message").removeClass();
-    					jQuery("#civi-tax-message").html("<p><span class='civi-tax-status'>Update:</span> " + TaxName + " has been added to the database.</p>").addClass(TaxActiveClass);
-    					jQuery("#civi-tax-message").fadeIn('slow');
+    					
+    					
+    					cj('#crm-notification-container').empty();
+						cj('#crm-notification-container').html('<div class="success ui-notify-message ui-notify-message-style" style=""><div title="close" class="icon ui-notify-close"> </div><a title="close" href="#" class="ui-notify-cross ui-notify-close">x</a><h1>Success</h1><div class="notify-content">' + TaxName + ' has been added to the database.</div></div>');
+						cj('#crm-notification-container').fadeIn('slow');
 						setTimeout(function(){
-    						jQuery("#civi-tax-message").fadeOut("slow");
-						},3000)
+    						cj('#crm-notification-container').fadeOut('slow');
+						},7000);
+						cj('.ui-notify-cross.ui-notify-close').click(function(){
+    						cj('#crm-notification-container').fadeOut('slow');
+						});
   					},
   				
   					error: function(){
-    					jQuery("#civi-tax-message").html("<p><span class='civi-tax-status'>Error:</span> There was a problem inserting the new tax type. <br/>Please refresh the page and try again.</p>");
+  						
+  						cj('#crm-notification-container').empty();
+						cj('#crm-notification-container').html('<div class="alert ui-notify-message ui-notify-message-style" style=""><div title="close" class="icon ui-notify-close"> </div><a title="close" href="#" class="ui-notify-cross ui-notify-close">x</a><h1>Error</h1><div class="notify-content">There was a problem inserting the new tax type. <br/>Please refresh the page and try again.</div></div>');
+						cj('#crm-notification-container').fadeIn('slow');
+						setTimeout(function(){
+    						cj('#crm-notification-container').fadeOut('slow');
+						},7000);
+						cj('.ui-notify-cross.ui-notify-close').click(function(){
+    						cj('#crm-notification-container').fadeOut('slow');
+						});
   					}
 				});
 			}
