@@ -293,7 +293,8 @@
                     	},
                     	No: function () {
                     		cj(this).dialog("close");
-                    		
+                    		ThisObj.text('edit');
+                    		ThisObj.next('.civi-tax-edit-cancel').fadeOut('fast');
                     	}
                 	},
                 	close: function (event, ui) {
