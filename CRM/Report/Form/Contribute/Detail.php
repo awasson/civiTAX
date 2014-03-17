@@ -383,7 +383,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
         $limit = count($arr_taxes);
         
         // TEMPORARY DISABLE INDIVIDUAL UNTIL REPORTING WORKS 
-        $script_str = "";
+        // $script_str = "";
         
         for($x = 0; $x < $limit; $x++) {
           	$tax_value = $arr_taxes[$x]['tax_name'];
@@ -394,17 +394,18 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
           	$this->_columns['civi_tax_invoicing']['fields'][$tax_name]['default'] = TRUE;
           	
           	// TEMPORARY DISABLE INDIVIDUAL UNTIL REPORTING WORKS 	          	
-          	$script_str .= "cj('#fields_" . $tax_name . "').attr('disabled', 'disabled');\n";
+          	// $script_str .= "cj('#fields_" . $tax_name . "').attr('disabled', 'disabled');\n";
           	
         } 
         
         // TEMPORARY DISABLE INDIVIDUAL UNTIL REPORTING WORKS 
+        /*
         print "<script>";
         print "cj( document ).ready(function() {";
         print $script_str;
         print "});";
         print "</script>";
-        
+        */
         // ADD SUM(tax_charged) FIELD
     	$this->_columns['civi_tax_invoicing']['fields']['tax_charged']['title'] = 'Total Tax Charged';
     	$this->_columns['civi_tax_invoicing']['fields']['tax_charged']['default'] = TRUE;
@@ -462,7 +463,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
   }
 
   function preProcess() {
-    parent::preProcess();
+  	parent::preProcess();
   }
 
   function select() {
@@ -500,7 +501,17 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
   }
 
   function from($softcredit = FALSE) {
-    $this->_from = "
+  
+  	// CIVI_TAX ADDITION: ADD DYNAMIC SUB-QUERIES FOR INDIVIDUAL TAXES
+  	$subquery = "";
+	$sql = "SELECT id, tax FROM civi_tax_type query";
+	$dao = CRM_Core_DAO::executeQuery($sql);
+	while( $dao->fetch( ) ) { 
+    	$subquery .= ",\n(SELECT civi_tax_invoicing.tax_charged FROM civi_tax_invoicing WHERE contribution_civireport.invoice_id = civi_tax_invoicing.invoice_id  COLLATE utf8_unicode_ci AND civi_tax_invoicing.tax_id = " . $dao->id . ") AS civi_tax_invoicing_tax_" . strtolower($dao->tax);
+	}  
+  	// CIVI_TAX END: ADD DYNAMIC SUB-QUERIES FOR INDIVIDUAL TAXES
+  
+    $this->_from = $subquery . "
         FROM  civicrm_contact      {$this->_aliases['civicrm_contact']} {$this->_aclFrom}
               INNER JOIN civicrm_contribution {$this->_aliases['civicrm_contribution']}
                       ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_contribution']}.contact_id AND {$this->_aliases['civicrm_contribution']}.is_test = 0";
@@ -511,7 +522,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     }
 
     if ($softcredit) {
-      $this->_from = "
+      $this->_from = $subquery . "
         FROM  civireport_contribution_detail_temp1 temp1_civireport
                INNER JOIN civicrm_contribution {$this->_aliases['civicrm_contribution']}
                        ON temp1_civireport.civicrm_contribution_contribution_id = {$this->_aliases['civicrm_contribution']}.id
@@ -918,7 +929,7 @@ WHERE  civicrm_contribution_contribution_id={$row['civicrm_contribution_contribu
         break;
       }
       $lastKey = $rowNum;
-    }
+    }  
   }
 
   function sectionTotals( ) {
