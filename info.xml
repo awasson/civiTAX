@@ -20,7 +20,7 @@
   <compatibility>
     <ver>4.4</ver>
   </compatibility>
-  <comments>This is a new module under testing</comments>
+  <comments>This is a new module ready for testing</comments>
   <civix>
     <namespace>CRM/Civitax</namespace>
   </civix>
