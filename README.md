@@ -1,4 +1,4 @@
-CiviTAX: A civiCRM tax field extension 
+CiviTAX: A CiviCRM tax field extension 
 =====================================
 
 MARCH 24, 2014: REPORTING WORKS! WILL CALL FOR TESTING IN THE NEXT DAY OR TWO.
