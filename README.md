@@ -40,6 +40,7 @@ NOTE: This extension has been developed for CiviCRM 4.3.x and higher and is curr
  - Upload to your CiviCRM website to your extensions folder (check Administer -> System Settings -> Directories for the location of your CiviCRM Extensions Directory).
  - Navigate to Administer -> System Settings -> Manage Extensions to install the CiviTax module.
  - If the module installed without any errors, navigate to the CiviTax main navigational element to the settings page where you can create tax types and apply them to the applicable contribution types.
+ - All going well, the extension will now calculate and charge applicable taxes at the point of transaction confirmation and you will be able to review all tax related transaction information in the Detailed Contribution report (Reports -> Contribution Reports -> Contribution Details).  
  
 This extension will apply one or more taxes to a contribution type and multiple taxes are added not compounded. ie: tax1 = 5%, tax2 = 7%. Total Tax = tax1 + tax2 = 12%
 
