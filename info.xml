@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <extension key="ca.lunahost.civitax" type="module">
-  <file>Civitax</file>
+  <file>civitax</file>
   <name>CiviCRM Tax Field Extension</name>
   <description>An extension module to provide the ability for applying taxes to purchases via the CiviCRM system.</description>
   <urls>
