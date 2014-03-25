@@ -1037,10 +1037,15 @@ WHERE  civicrm_contribution_contribution_id={$row['civicrm_contribution_contribu
 			if(isset($this->_columnHeaders['civi_tax_invoicing_tax_charged_sum'])) {
 				unset($this->_columnHeaders['civi_tax_invoicing_tax_charged_sum']);
 			}
+			if(isset($this->_columnHeaders['civicrm_contribution_fee_amount'])) {
+				unset($this->_columnHeaders['civicrm_contribution_fee_amount']);
+			}
 			
-			unset($this->_columnHeaders['civicrm_contribution_fee_amount']);
 			unset($this->_columnHeaders['civicrm_contribution_total_amount']);
-			unset($this->_columnHeaders['civicrm_address_country_id']);
+			
+			if(isset($this->_columnHeaders['civicrm_address_country_id'])) {
+				unset($this->_columnHeaders['civicrm_address_country_id']);
+			}
 			
 			if(isset($oldHeaders['civi_tax_invoicing_pre_tax'])) {
 				$this->_columnHeaders['civi_tax_invoicing_pre_tax'] = $oldHeaders['civi_tax_invoicing_pre_tax'];
@@ -1068,9 +1073,16 @@ WHERE  civicrm_contribution_contribution_id={$row['civicrm_contribution_contribu
 				$this->_columnHeaders['civi_tax_invoicing_tax_charged_sum'] = $oldHeaders['civi_tax_invoicing_tax_charged_sum'];
 			}
 			
-			$this->_columnHeaders['civicrm_contribution_fee_amount'] = $oldHeaders['civicrm_contribution_fee_amount'];
+			if(isset($oldHeaders['civicrm_contribution_fee_amount'])) {
+				$this->_columnHeaders['civicrm_contribution_fee_amount'] = $oldHeaders['civicrm_contribution_fee_amount'];
+			}
+			
 			$this->_columnHeaders['civicrm_contribution_total_amount'] = $oldHeaders['civicrm_contribution_total_amount'];
-			$this->_columnHeaders['civicrm_address_country_id'] = $oldHeaders['civicrm_address_country_id'];
+			
+			if(isset($oldHeaders['civicrm_address_country_id'])) {
+				$this->_columnHeaders['civicrm_address_country_id'] = $oldHeaders['civicrm_address_country_id'];
+			}
+				
 	}
   // CIVI_TAX END: CHANGE THE ORDER OF THE COLUMNS 
 
