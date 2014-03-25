@@ -30,7 +30,20 @@ The following Features have not been added
  - Editing Taxes: You can delete a tax but you can not edit yet. 
  - Emailed Receipts: Emailed receipts do not reflect tax charges. I've got nothing for this yet.
 
+USAGE
+=====
 
+NOTE: This extension has been developed for CiviCRM 4.3.x and higher and is currently in testing phase
+
+ - Download the CiviTax extension by clicking the "Download ZIP" link on the right side of this Github page.
+ - Extract the zip file and rename the resulting folder ca.lunahost.civitax  
+ - Upload to your CiviCRM website to your extensions folder (check Administer -> System Settings -> Directories for the location of your CiviCRM Extensions Directory).
+ - Navigate to Administer -> System Settings -> Manage Extensions to install the CiviTax module.
+ - If the module installed without any errors, navigate to the CiviTax main navigational element to the settings page where you can create tax types and apply them to the applicable contribution types.
+ 
+This extension will apply one or more taxes to a contribution type and multiple taxes are added not compounded. ie: tax1 = 5%, tax2 = 7%. Total Tax = tax1 + tax2 = 12%
+
+NOTE: Testing started March 25, 2014. If you have anything to add, experiences, bug reports, feature requests, etc... please use the Issue Queue (https://github.com/awasson/civiTAX/issues).
 
 BACKGROUND
 ==========
