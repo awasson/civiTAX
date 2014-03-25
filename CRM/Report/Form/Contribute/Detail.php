@@ -243,7 +243,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
           'fee_amount' => NULL,
           'net_amount' => NULL,
 
-          'total_amount' => array('title' => ts('Amount'),
+          'total_amount' => array('title' => ts('Total Amount'),
             'required' => TRUE,
             /**
              * Remove the sum operation from this field
@@ -1038,6 +1038,7 @@ WHERE  civicrm_contribution_contribution_id={$row['civicrm_contribution_contribu
 				unset($this->_columnHeaders['civi_tax_invoicing_tax_charged_sum']);
 			}
 			
+			unset($this->_columnHeaders['civicrm_contribution_fee_amount']);
 			unset($this->_columnHeaders['civicrm_contribution_total_amount']);
 			unset($this->_columnHeaders['civicrm_address_country_id']);
 			
@@ -1067,6 +1068,7 @@ WHERE  civicrm_contribution_contribution_id={$row['civicrm_contribution_contribu
 				$this->_columnHeaders['civi_tax_invoicing_tax_charged_sum'] = $oldHeaders['civi_tax_invoicing_tax_charged_sum'];
 			}
 			
+			$this->_columnHeaders['civicrm_contribution_fee_amount'] = $oldHeaders['civicrm_contribution_fee_amount'];
 			$this->_columnHeaders['civicrm_contribution_total_amount'] = $oldHeaders['civicrm_contribution_total_amount'];
 			$this->_columnHeaders['civicrm_address_country_id'] = $oldHeaders['civicrm_address_country_id'];
 	}
