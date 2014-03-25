@@ -58,15 +58,15 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
       asort($this->activeCampaigns);
     }
     
-    // CIVI_TAX: Get Active Taxes
-    $sql = "SELECT * FROM civi_tax_type WHERE active = 1";
+    // CIVI_TAX: Get Taxes
+    $sql = "SELECT * FROM civi_tax_type";
     $dao = CRM_Core_DAO::executeQuery($sql);
     $x = 0;
     while( $dao->fetch( ) ) {   
     	$arr_taxes[$x]['tax_name'] = $dao->tax;
     	$x++;
     }
-    // CIVI_TAX END: Get Active Taxes
+    // CIVI_TAX END: Get Taxes
     
     $this->_columns = array(
       'civicrm_contact' =>
