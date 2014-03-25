@@ -58,7 +58,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
       asort($this->activeCampaigns);
     }
     
-    // CIVI_TAX ADDITION: Get Active Taxes
+    // CIVI_TAX: Get Active Taxes
     $sql = "SELECT * FROM civi_tax_type WHERE active = 1";
     $dao = CRM_Core_DAO::executeQuery($sql);
     $x = 0;
@@ -181,7 +181,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
       ),
       
       
-    // CIVI_TAX ADDITION: ADD ARRAY FOR TAX INVOICING
+    // CIVI_TAX: ADD ARRAY FOR TAX INVOICING
 	'civi_tax_invoicing' => array( 
 		'dao' => 'CRM_Core_DAO_TaxInvoicing', 
 		'fields' => array(),
@@ -247,7 +247,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
             'required' => TRUE,
             /**
              * Remove the sum operation from this field
-             * somehow the tax thing messes it up
+             * somehow the addition of summed taxes messes it up
              */  
             //	'statistics' =>
             //	array('sum' => ts('Amount')),
@@ -369,7 +369,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     ) + $this->addAddressFields(FALSE);
     
     
-    // CIVI_TAX ADDITION: PUSH CUSTOM TAX FIELDS INTO ARRAY   
+    // CIVI_TAX: PUSH CUSTOM TAX FIELDS INTO ARRAY   
     if(isset($arr_taxes) && is_array($arr_taxes)) {
     
     	// REMOVE NET VALUE
@@ -382,9 +382,6 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     	// ADD DYNAMIC TAX FIELDS
         $limit = count($arr_taxes);
         
-        // TEMPORARY DISABLE INDIVIDUAL UNTIL REPORTING WORKS 
-        // $script_str = "";
-        
         for($x = 0; $x < $limit; $x++) {
           	$tax_value = $arr_taxes[$x]['tax_name'];
           	$tax_name = "tax_$tax_value";
@@ -392,20 +389,9 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
           	$array[$tax_name]['title'] = $tax_value;
           	$this->_columns['civi_tax_invoicing']['fields'][$tax_name]['title'] = $tax_value . " Tax";
           	$this->_columns['civi_tax_invoicing']['fields'][$tax_name]['default'] = TRUE;
-          	
-          	// TEMPORARY DISABLE INDIVIDUAL UNTIL REPORTING WORKS 	          	
-          	// $script_str .= "cj('#fields_" . $tax_name . "').attr('disabled', 'disabled');\n";
-          	
+          	$this->_columns['civi_tax_invoicing']['fields'][$tax_name]['pseudofield'] = TRUE;          	
         } 
-        
-        // TEMPORARY DISABLE INDIVIDUAL UNTIL REPORTING WORKS 
-        /*
-        print "<script>";
-        print "cj( document ).ready(function() {";
-        print $script_str;
-        print "});";
-        print "</script>";
-        */
+
         // ADD SUM(tax_charged) FIELD
     	$this->_columns['civi_tax_invoicing']['fields']['tax_charged']['title'] = 'Total Tax Charged';
     	$this->_columns['civi_tax_invoicing']['fields']['tax_charged']['default'] = TRUE;
@@ -413,12 +399,6 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
         
     } 
     // CIVI_TAX END: PUSH CUSTOM TAX FIELDS INTO ARRAY
-    
-    // CIVI_TAX TESTING
-    print "<div class='columns_array' style='display:none;'><pre>";
-    print_r($this->_columns);
-    print "</pre></div>";
-    // CIVI_TAX TESTING
 
     $this->_tagFilter = TRUE;
 
@@ -502,12 +482,18 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
 
   function from($softcredit = FALSE) {
   
-  	// CIVI_TAX ADDITION: ADD DYNAMIC SUB-QUERIES FOR INDIVIDUAL TAXES
+  	// CIVI_TAX: ADD DYNAMIC SUB-QUERIES FOR INDIVIDUAL TAXES
+  	/**
+  	 * This is a workaround to force the individual tax fields into the query
+  	 * Once I figure out how to to return them from the selectClause function without
+  	 * intruducing a Incorrect usage/placement of 'SQL_CALC_FOUND_ROWS' error, 
+  	 * we'll get rid of this.
+  	 */
   	$subquery = "";
 	$sql = "SELECT id, tax FROM civi_tax_type query";
 	$dao = CRM_Core_DAO::executeQuery($sql);
 	while( $dao->fetch( ) ) { 
-    	$subquery .= ",\n(SELECT civi_tax_invoicing.tax_charged FROM civi_tax_invoicing WHERE contribution_civireport.invoice_id = civi_tax_invoicing.invoice_id  COLLATE utf8_unicode_ci AND civi_tax_invoicing.tax_id = " . $dao->id . ") AS civi_tax_invoicing_tax_" . strtolower($dao->tax);
+    	$subquery .= ",\n(SELECT civi_tax_invoicing.tax_charged FROM civi_tax_invoicing WHERE contribution_civireport.invoice_id = civi_tax_invoicing.invoice_id  COLLATE utf8_unicode_ci AND civi_tax_invoicing.tax_id = " . $dao->id . ") AS civi_tax_invoicing_tax_" . strtolower($dao->tax) . "";
 	}  
   	// CIVI_TAX END: ADD DYNAMIC SUB-QUERIES FOR INDIVIDUAL TAXES
   
@@ -588,7 +574,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
                         ON {$this->_aliases['civicrm_batch']}.id = {$this->_aliases['civicrm_entity_batch']}.batch_id";
     }
     
-    // CIVI_TAX ADDITION: INSERT LEFT JOIN ON TAX INVOICING TABLE
+    // CIVI_TAX: INSERT LEFT JOIN ON TAX INVOICING TABLE
     $this->_from .= "
     	LEFT JOIN civi_tax_invoicing {$this->_aliases['civi_tax_invoicing']} 
     		ON {$this->_aliases['civicrm_contribution']}.invoice_id = {$this->_aliases['civi_tax_invoicing']}.invoice_id COLLATE utf8_unicode_ci";
@@ -682,12 +668,6 @@ GROUP BY {$this->_aliases['civicrm_contribution']}.currency";
 
     // 1. use main contribution query to build temp table 1
     $sql = $this->buildQuery();
-    
-    // CIVI_TAX TESTING
-    print "<div class='sql_string' style='display:none;'><pre>";
-    print_r($sql);
-    print "</pre></div>";
-    // CIVI_TAX TESTING
 
     $tempQuery = 'CREATE TEMPORARY TABLE civireport_contribution_detail_temp1 AS ' . $sql;
     CRM_Core_DAO::executeQuery($tempQuery);
@@ -726,10 +706,7 @@ GROUP BY {$this->_aliases['civicrm_contribution']}.currency";
     } else if (CRM_Utils_Array::value('contribution_or_soft_value', $this->_params) == 'soft_credits_only') {
       $tempQuery = "(SELECT * FROM civireport_contribution_detail_temp2)";
     } else {
-      $tempQuery = "
-(SELECT * FROM civireport_contribution_detail_temp1)
-UNION ALL
-(SELECT * FROM civireport_contribution_detail_temp2)";
+      $tempQuery = "(SELECT * FROM civireport_contribution_detail_temp1) UNION ALL (SELECT * FROM civireport_contribution_detail_temp2)";
     }
 
     // 4. build temp table 3
@@ -761,6 +738,7 @@ UNION ALL
 
     // do print / pdf / instance stuff if needed
     $this->endPostProcess($rows);
+
   }
 
   function alterDisplay(&$rows) {
@@ -1022,7 +1000,34 @@ WHERE  civicrm_contribution_contribution_id={$row['civicrm_contribution_contribu
     }
   }
   
-  // CIVI_TAX ADDITION: CHANGE THE ORDER OF THE COLUMNS 
+  
+	// CIVI_TAX: RESPOND TO SELECTED TAX TYPE FIELDS DYNAMICALLY
+	function selectClause(&$tableName, $tableKey, &$fieldName, &$field) {
+	
+		$sql = "SELECT * FROM civi_tax_type";
+    	$dao = CRM_Core_DAO::executeQuery($sql);
+    	while( $dao->fetch( ) ) {   
+			$tax_name = $dao->tax;
+        	$tax_name = "tax_$tax_name";
+        	$tax_name = strtolower("$tax_name");
+			if ($fieldName == $tax_name) {
+      			$this->_columnHeaders["{$tableName}_{$fieldName}"]['title'] = CRM_Utils_Array::value('title', $field);
+      			$this->_columnHeaders["{$tableName}_{$fieldName}"]['type'] = CRM_Utils_Array::value('type', $field);
+      			$this->_columnHeaders["{$tableName}_{$fieldName}"]['pseudofield'] = CRM_Utils_Array::value('pseudofield', $field);
+      			$this->_columnHeaders["{$tableName}_{$fieldName}"]['where'] = CRM_Utils_Array::value('where', $field);      		      		
+      			// return CRM_Utils_Array::value('where', $field); // EVENTUALLY WE'LL RETURN THE SUBQUERY DIRECTLY
+      			return CRM_Utils_Array::value('number', $field);
+    		}
+    		
+    	}  
+
+	return FALSE;
+
+	}
+	// CIVI_TAX END: RESPOND TO SELECTED TAX TYPE FIELDS
+  
+  
+  	// CIVI_TAX: CHANGE THE ORDER OF THE COLUMNS 
   	function modifyColumnHeaders( ) {
 			$oldHeaders = $this->_columnHeaders;
 			if(isset($this->_columnHeaders['civi_tax_invoicing_pre_tax'])) {
@@ -1040,6 +1045,24 @@ WHERE  civicrm_contribution_contribution_id={$row['civicrm_contribution_contribu
 				$this->_columnHeaders['civi_tax_invoicing_pre_tax'] = $oldHeaders['civi_tax_invoicing_pre_tax'];
 			}
 			
+			/**
+			 * Add individual taxes here
+			 */
+			$sql = "SELECT * FROM civi_tax_type";
+    		$dao = CRM_Core_DAO::executeQuery($sql);
+    		while( $dao->fetch( ) ) {   
+				$tax_name = $dao->tax;
+        		$tax_name = "civi_tax_invoicing_tax_$tax_name";
+        		$tax_name = strtolower("$tax_name");
+        		if(isset($this->_columnHeaders[$tax_name])) {
+					unset($this->_columnHeaders[$tax_name]);
+				}
+        		if(isset($oldHeaders[$tax_name])) {
+        			$this->_columnHeaders[$tax_name] = $oldHeaders[$tax_name];
+        		}
+        		
+        	}
+
 			if(isset($oldHeaders['civi_tax_invoicing_tax_charged_sum'])) {
 				$this->_columnHeaders['civi_tax_invoicing_tax_charged_sum'] = $oldHeaders['civi_tax_invoicing_tax_charged_sum'];
 			}

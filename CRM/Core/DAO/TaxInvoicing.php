@@ -222,21 +222,19 @@ class CRM_Core_DAO_TaxInvoicing extends CRM_Core_DAO
         $tax_name = "tax_$tax_name";
         $tax_name = strtolower("$tax_name");
         self::$_fields[$tax_name]['name'] = $tax_name;
+        self::$_fields[$tax_name]['number'] = $dao->id;
         self::$_fields[$tax_name]['type'] = 1024;
         self::$_fields[$tax_name]['title'] = $dao->tax;
         self::$_fields[$tax_name]['required'] = false;
         self::$_fields[$tax_name]['import'] = true;
-        self::$_fields[$tax_name]['where'] = "(SELECT civi_tax_invoicing.tax_charged FROM civi_tax_invoicing WHERE contribution_civireport.invoice_id = civi_tax_invoicing.invoice_id  COLLATE utf8_unicode_ci AND civi_tax_invoicing.tax_id = " . $dao->id . ")";
+        self::$_fields[$tax_name]['where'] = "(SELECT civi_tax_invoicing.tax_charged FROM civi_tax_invoicing WHERE contribution_civireport.invoice_id = civi_tax_invoicing.invoice_id  COLLATE utf8_unicode_ci AND civi_tax_invoicing.tax_id = " . $dao->id . ") AS civi_tax_invoicing_$tax_name";
         self::$_fields[$tax_name]['dataPattern'] = '/^\d+(\.\d{2})?$/';
         self::$_fields[$tax_name]['export'] = true;
+        self::$_fields[$tax_name]['pseudofield'] = true;
     	$x++;
     }
     // CIVI_TAX END: DYNAMICALLY ADD INDIVIDUAL TAX FIELDS
-    
-    print "<div style='display:none;' class='dao_fields'><pre>";
-    print_r(self::$_fields);
-    print "</pre></div>";
-    
+
     return self::$_fields;
   }
     /**
@@ -260,31 +258,6 @@ class CRM_Core_DAO_TaxInvoicing extends CRM_Core_DAO
         'post_tax' => 'post_tax',
      );
     }
-    
-    // CIVI_TAX ADDITION: DYNAMICALLY ADD INDIVIDUAL TAX FIELD KEYS
-    $sql = "SELECT * FROM civi_tax_type";
-    $dao = CRM_Core_DAO::executeQuery($sql);
-    $x = 0;
-    while( $dao->fetch( ) ) {   
-    	$tax_name = $dao->tax;
-        $tax_name = "tax_$tax_name";
-        $tax_name = strtolower("$tax_name");
-        self::$_fields[$tax_name]['name'] = $tax_name;
-        self::$_fields[$tax_name]['type'] = 1024;
-        self::$_fields[$tax_name]['title'] = $dao->tax;
-        self::$_fields[$tax_name]['required'] = false;
-        self::$_fields[$tax_name]['import'] = true;
-        self::$_fields[$tax_name]['where'] = "(SELECT civi_tax_invoicing.tax_charged FROM civi_tax_invoicing WHERE contribution_civireport.invoice_id = civi_tax_invoicing.invoice_id  COLLATE utf8_unicode_ci AND civi_tax_invoicing.tax_id = " . $dao->id . ")";
-        self::$_fields[$tax_name]['dataPattern'] = '/^\d+(\.\d{2})?$/';
-        self::$_fields[$tax_name]['export'] = true;
-    	$x++;
-    }
-    // CIVI_TAX END: DYNAMICALLY ADD INDIVIDUAL TAX FIELD KEYS
-    
-    print "<div style='display:none;' class='dao_fieldkeys'><pre>";
-    print_r(self::$_fieldKeys);
-    print "</pre></div>";
-    
     return self::$_fieldKeys;
   }
   /**
