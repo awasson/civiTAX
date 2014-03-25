@@ -1,6 +1,8 @@
 civiTAX: A civiCRM tax field extension 
 =====================================
 
+MARCH 24, 2014: REPORTING WORKS! WILL CALL FOR TESTING IN THE NEXT DAY OR TWO.
+
 MARCH 8, 2014: TAXABLE BASIC REPORTING WORKS.
 Basic reporting in the Contribution Detailed Report works for Pre Tax, Total Tax but not for the individual taxes yet.
 
@@ -24,12 +26,9 @@ Settings: Tax management is controlled via the CiviTAX settings page which is av
  
  This extension keeps a record of transactions in the database which will be used for reporting.
  
- The following Features have not been added
-
-  - Reporting: Has been started but not completed. 
-  If tax fields are selected in the detailed contribution report, it will return an error.
-  - Editing Taxes: You can delete a tax but you can not edit yet. 
-  - Emailed Receipts: Emailed receipts do not reflect tax charges. I've got nothing for this yet.
+The following Features have not been added
+ - Editing Taxes: You can delete a tax but you can not edit yet. 
+ - Emailed Receipts: Emailed receipts do not reflect tax charges. I've got nothing for this yet.
 
 
 
