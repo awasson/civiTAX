@@ -46,11 +46,11 @@ NOTE: This extension has been developed for CiviCRM 4.3.x and higher and is curr
  
 This extension will apply one or more taxes to a contribution type and multiple taxes are added not compounded. ie: tax1 = 5%, tax2 = 7%. Total Tax = tax1 + tax2 = 12%
 
-NOTE: The extension does not currently support tax calculations on the Pay Later option. This is a current high priority so I don't expect it will take long to remedy this issue.
-
 NOTE: At this time the extension does not add the "after tax" amount to the invoices so please update your templates (particularly the offline one that is emailed) to indicate that the amount invoices is subject to tax. I am currently working on a solution to alter the invoiced amount to reflect the amount that is charged so this may change in the near future. 
 
 NOTE: Testing started March 25, 2014. If you have anything to add, experiences, bug reports, feature requests, etc... please use the Issue Queue (https://github.com/awasson/civiTAX/issues).
+
+~~NOTE: [fixed March 26] The extension does not currently support tax calculations on the Pay Later option. This is a current high priority so I don't expect it will take long to remedy this issue.~~
 
 BACKGROUND
 ==========
