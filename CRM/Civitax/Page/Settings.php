@@ -2,25 +2,44 @@
 
 require_once 'CRM/Core/Page.php';
 
-/**
- * For testing 
- *
-    print "rawParams info: "; 
-    print "<div id='rawparams' style='display:none;'><pre>";
-    print_r($_SESSION['rawParams']);
-    print "</pre></div>";
+    /**
+     * For testing 
+     *
+     */
 
-    print "cookedParams info: "; 
-    print "<div id='cookedparams' style='display:none;'><pre>";
-    print_r($_SESSION['cookedParams']);
-    print "</pre></div>";
-
+/*
     print "paymentObj info: "; 
     print "<div id='paymentobj' style='display:none;'><pre>";
     print_r($_SESSION['paymentObj']);
+    print "</pre></div>";  
+     
+    print "<div id='rawparams' style='display:none;'><pre>";
+    print "rawParams info: ";
+    if(isset($_SESSION['rawParams'])) {
+        print_r($_SESSION['rawParams']);
+    }
     print "</pre></div>";
- *
- */
+    
+    print "<div id='cookedparams' style='display:none;'><pre>";
+    print "cookedParams info: "; 
+    if(isset($_SESSION['cookedParams'])) {
+        print_r($_SESSION['cookedParams']);
+    }
+    print "</pre></div>";
+    
+    
+    print '<div class="formname" style="display: none;"><pre>';
+    if(isset($_SESSION['formName'])) {
+	    print_r($_SESSION['formName']);
+	}
+	print '</pre></div>';
+	
+	print '<div class="form" style="display: none;"><pre>';
+	if(isset($_SESSION['form'])) {
+	    print_r($_SESSION['form']);
+	}
+	print '</pre></div>';
+*/
 
 class CRM_Civitax_Page_Settings extends CRM_Core_Page {
   function run() {

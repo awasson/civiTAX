@@ -122,7 +122,19 @@ function civitax_civicrm_buildForm($formName, $form) {
 					}
 										
 					break;
+				
+				case '4':
 					
+					if ($dao->N > 0) {
+						while( $dao->fetch( ) ) {   
+       						$str_taxes .= $dao->tax . "/";
+    					}
+    					$str_taxes = rtrim($str_taxes, "/"); //remove the extra '/'
+						$civitax_statement = "Event fees are subject to $str_taxes Tax";	
+					}
+										
+					break;
+						
 				default:
 					
 					break;
@@ -184,11 +196,6 @@ function civitax_civicrm_buildForm($formName, $form) {
  * @return void
  */
 function civitax_civicrm_alterPaymentProcessorParams($paymentObj, &$rawParams, &$cookedParams) {
-     
-    // TESTING: Throw the $paymentObj into a session to inspect. 
-    // $_SESSION['rawParams'] = $rawParams;
-    // $_SESSION['cookedParams'] = $cookedParams;
-    // $_SESSION['paymentObj'] = $paymentObj;
     
     // Grab transaction variables from the $rawParams array.
     $invoice_id = $rawParams['invoiceID'];
@@ -268,7 +275,7 @@ function civitax_civicrm_alterPaymentProcessorParams($paymentObj, &$rawParams, &
     			
     			// Save a record of the transaction information for reporting later.
     			$sql = "INSERT INTO civi_tax_invoicing(invoice_id, tax_id, tax_name, pre_tax, tax_rate, tax_charged, post_tax) VALUES('".$invoice_id."', ".$tax_id.", '".$tax_name."', '".$pre_tax."', '".$tax_rate."', '".$tax_charged."', '".$post_tax."')";
-    			$dao2 = CRM_Core_DAO::executeQuery($sql);
+    			CRM_Core_DAO::executeQuery($sql);
     		
     		
     		}
@@ -284,6 +291,128 @@ function civitax_civicrm_alterPaymentProcessorParams($paymentObj, &$rawParams, &
 
     }
     
+    // TESTING: Throw the Params into a session to inspect. 
+    // $_SESSION['rawParams'] = $rawParams;
+    // $_SESSION['cookedParams'] = $cookedParams;
+    // $_SESSION['paymentObj'] = $paymentObj;
+    
+}
+
+
+/**
+ * Implementation of hook_civicrm_postProcess
+ * We'll use this to handle contributions of a Pay Later status
+ * We'll capture the data, log it as a taxable transaction and 
+ * then alter the existing transaction data to show a final post_tax_amount.
+ */
+function civitax_civicrm_postProcess( $formName, &$form ) {
+	
+	$params = $form->getVar('_params');
+
+	/**
+	 * If this is a pay_later process
+	 * we need to trap the data, calculate the taxes
+	 * and update the final amount.
+	 */
+	if(isset($params) && isset($params['is_pay_later']) && $params['is_pay_later'] == true && $formName == 'CRM_Contribute_Form_Contribution_Confirm' || $formName == 'CRM_Event_Form_Registration_Confirm') {	
+		
+		$invoice_id = $params['invoiceID'];
+    	$pre_tax = $params['amount'];
+		$financial_type_id = $params['contributionTypeID'];
+		
+		$stringvar = "Invoice ID: $invoice_id <br/>Pre tax amount: $pre_tax <br/>Financial Type ID: $financial_type_id";
+    	
+    	/**
+     	 * GET TAX ID OR ID'S
+     	 */ 
+		$sql = "SELECT * FROM civi_tax_contribution_type WHERE contribution_type_id = $financial_type_id";
+    	$dao = CRM_Core_DAO::executeQuery($sql);
+    	$arr_contribution_type_ids = array();
+    	$x = 0;
+
+    	while( $dao->fetch( ) ) {   
+			$arr_contribution_type_ids[$x]['id'] = $dao->tax_id;
+       		$x++;	
+    	}
+
+    	/**
+     	 * Check the results 
+     	 * If we have results from above, it's taxable
+     	 */
+    	if($x > 0 && is_array($arr_contribution_type_ids)) {
+    
+    		//LOOP THROUGH TAXES AND CREATE ARRAY OF VALUES FOR REPORTING
+    		$y = 0;
+    		$limit = count($arr_contribution_type_ids);
+    		$arr_reporting = array();
+    		for($x = 0; $x < $limit; $x++) {
+    			$tax_id = $arr_contribution_type_ids[$x]['id'];
+    			$sql = "SELECT * FROM civi_tax_type WHERE id = $tax_id";
+    			$dao = CRM_Core_DAO::executeQuery($sql);
+    			$dao->fetch();   
+		
+    			$tax_active = $dao->active;
+	
+    			/**
+    		 	 * We have to ignore any innactive taxes so
+    		 	 * Loop through $arr_contribution_type_ids 
+    		 	 * and create an array to insert into civi_tax_invoicing 
+    		 	 * If $tax_active == 0 then ignore it entirely
+    		 	 */
+    			if($tax_active == 1) {
+    				$arr_reporting[$y]['tax_id'] 		= $tax_id;
+    				$arr_reporting[$y]['tax_name'] 		= $dao->tax;
+    				$arr_reporting[$y]['tax_rate'] 		= ($dao->rate * .01);
+    				$arr_reporting[$y]['tax_charged'] 	= ($dao->rate * .01) * $pre_tax;
+    				$y++;
+    			}
+    			
+			}
+		
+			// If we have an array of taxes to report, loop through and report them
+    		$total_tax = 0;
+    		if($y > 0 && is_array($arr_reporting)) {
+    			$limit = count($arr_reporting);
+    			for($x = 0; $x < $limit; $x++) {
+    			
+    				$tax_id 		= $arr_reporting[$x]['tax_id'];
+    				$tax_name 		= $arr_reporting[$x]['tax_name'];
+    				$tax_rate 		= $arr_reporting[$x]['tax_rate'];
+    				$tax_charged 	= $arr_reporting[$x]['tax_charged'];
+    			
+    				$total_tax += $tax_charged;
+    			
+    				if($x < ($limit - 1)) {
+    					$post_tax = "carried forward";
+    				} else {
+    					$post_tax = $pre_tax + $total_tax;
+    				}
+    			
+    				// Save a record of the transaction information for reporting later.
+    				$sql = "INSERT INTO civi_tax_invoicing(invoice_id, tax_id, tax_name, pre_tax, tax_rate, tax_charged, post_tax) VALUES('".$invoice_id."', ".$tax_id.", '".$tax_name."', '".$pre_tax."', '".$tax_rate."', '".$tax_charged."', '".$post_tax."')";
+    				CRM_Core_DAO::executeQuery($sql);
+
+    			}
+
+    		}	
+    		
+    		/**
+    	 	 * Apply the $post_tax value to the $cookedParams array 
+    	 	 * so that the processor charges the total with tax
+    	 	 */
+    	 	 	
+    	 	 $total_with_tax = round($post_tax, 2);
+    	 	 $sql = "UPDATE civicrm_contribution SET total_amount = $total_with_tax WHERE invoice_id ='$invoice_id'";
+    	 	 CRM_Core_DAO::executeQuery($sql);
+			
+		}
+
+	// TESTING: Throw the Params into a session to inspect. 
+    // $_SESSION['formName'] = $formName;
+    // $_SESSION['form'] = $form;
+	
+	}
+
 }
 
 
