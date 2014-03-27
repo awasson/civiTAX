@@ -55,10 +55,21 @@ NOTE: Testing started March 25, 2014. If you have anything to add, experiences, 
 BACKGROUND
 ==========
 
-The civiTAX extension is the evolution of a modification (hack) that we made to a copy of civiCRM to add a tax field and reporting for purchasing of memberships and events.
+The CiviTax extension module is a pet project of mine and I am looking to collaborate with others who are interested in building on it and improving it. It is the evolution of a modification (hack) that we made to a copy of civiCRM to add a tax field and reporting for purchasing of memberships and events.
 
-This extension provides the ability to add any number of taxes via a settings page which can then be applied to the appropriate contribution types. Taxes can be edited as necessary to change their name or rate and taxes can also be disabled without removing them completely from the system.
+This extension provides the ability to add any number of taxes via a settings page which can then be applied to the appropriate contribution types. The Taxes at this point are summed (ie: tax1 + tax2 = tax_total) as opposed to being compounded taxes. If it becomes apparent that compounded and summed taxes are required, we can add that as a feature request. Taxes can be edited as necessary to change their name or rate and taxes can also be disabled without removing them completely from the system.
 
 On the reporting side, we've added a database table that tracks invoice id, pre-tax cost, tax charged, the type of taxes applied and post-tax amount. This table can be queried at the time the reports are run and then the report can be appended with the information provided within. 
 
 More information regarding our prior methods can be found here: http://groups.drupal.org/node/182444 
+
+ROADMAP
+=======
+
+March 27, 2014: The CiviTax module is capable of establishing Taxes with a name and tax rate. "Taxes", once established are able to be applied to the contribution types that are available within CiviCRM. A purchase is made and on completion, the tax is applied to the purchase and the tax information is logged for reporting on the "Detailed Transaction" report. 
+
+Issues: 
+ - The offline invoice does not report the tax information or total amount with taxes. This is priority #1 issue
+ - The taxes are not editable in such a way as that we could change the name or the tax rate. This is a priority #2 issue 
+ 
+Next Steps: The next major advancement will be to integrate this module with the CiviCRM Financial Accounts system and inserting tax bookkeeping entries into civicrm_financial_items and all that good stuff.  
